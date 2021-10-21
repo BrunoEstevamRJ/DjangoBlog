@@ -34,15 +34,16 @@
 
         <h1><b><i>My Django Blog</i></b></h1>
 
-        <div class="col-md-4">
+        <div class="col-md-8">
             {% for post in posts %}
-
-            <div class="col-12"><h1>{{post.title}}</h1></div>
             <div class="col-12">
-                <p1>{{post.content}}</p1>
+                <h1>
+                    <a href="{{post.get_absolute_url}}">{{post.title}}</a>
+                </h1>
             </div>
-
+            <div class="col-12"><p>{{post.content}}</p></div>
             {% endfor %}
+
         </div>
     </div>
 </div>
