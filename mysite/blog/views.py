@@ -23,7 +23,7 @@ def post_single(request, post):
 # View de signup
 class SignUpView(generic.CreateView):
     form_class = UserCreationForm
-    sucess_url = reverse_lazy('blog:login') # Após o signup, redireciona para a página de login
+    success_url = reverse_lazy('login') # Após o signup, redireciona para a página de login
     template_name = 'registration/signup.html'
 
 
