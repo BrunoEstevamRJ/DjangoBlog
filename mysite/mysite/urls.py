@@ -1,4 +1,4 @@
-# o meu url esta assim
+# urls geral
 from django.contrib import admin
 from django.urls import path, include
 

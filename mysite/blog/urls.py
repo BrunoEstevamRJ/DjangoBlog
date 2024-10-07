@@ -1,3 +1,5 @@
+# urls app blog
+
 from django.contrib import admin
 from django.urls import path
 from . import views
@@ -9,4 +11,5 @@ urlpatterns = [
     path('', views.home, name='homepage'),
     path('<slug:post>/', views.post_single, name='post_single'),
     path('accounts/signup/', SignUpView.as_view(), name='signup'),
+    path('accounts/profile', views.profile, name='profile'),
 ]
