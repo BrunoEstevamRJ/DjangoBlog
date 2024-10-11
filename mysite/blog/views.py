@@ -36,9 +36,13 @@ def edit_profile(request):
         form = UserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('profile')
-        else:
-            form = UserChangeForm(instance=request.user)
-        return render(request, 'registration/edit_profile.html', {'form': form})
+            return redirect('profile')  # Redireciona para o perfil após a edição
+    else:
+        form = UserChangeForm(instance=request.user)
+    return render(request, 'registration/edit_profile.html', {'form': form})
 
 
+@login_required
+def user_posts(request):
+    posts = Post.objects.filter(author=request.user,status='published')
+    return render(request, 'blog/user_posts.html', {'posts':posts})
