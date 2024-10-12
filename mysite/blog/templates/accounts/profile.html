@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+
+  {% extends "base_generic.html" %}
+
+{% block content %}
+  <h2>Perfil de {{ user.username }}</h2>
+  <p>Email: {{ user.email }}</p>
+  <p>Data de registro: {{ user.date_joined }}</p>
+  <p>Outras informações do perfil...</p>
+{% endblock %}
+
+
+</head>
+<body>
+
+</body>
+</html>
