@@ -1,11 +1,11 @@
-from django.views.generic import CreateView
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post
+from django.views.generic import CreateView
+from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django.urls import reverse_lazy
-from django.views import generic
+
+from .models import Post
 
 
 # Create your views here.
