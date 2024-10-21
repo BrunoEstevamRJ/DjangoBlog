@@ -12,11 +12,23 @@ Welcome to Blog
 
         <div class="col-md-8 pt-5">
 
+            <!-- Botão para criação de post, aparece apenas para usuários logados -->
+            {% if user.is_authenticated %}
+            <div class="mb-4">
+                <a href="{% url 'blog:create_post' %}" class="btn btn-primary">Create New Post</a>
+            </div>
+            {% endif %}
+
+            <!-- Exibindo as postagens -->
             {% for post in posts %}
-            <div class="col-12"><h1>
-                <a class="text-dark" href="{{post.get_absolute_url}}">{{post.title}}</a>
-            </h1></div>
-            <div class="col-12"><p>{{post.excerpt}}</p></div>
+            <div class="col-12">
+                <h1>
+                    <a class="text-dark" href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                </h1>
+            </div>
+            <div class="col-12">
+                <p>{{ post.excerpt }}</p>
+            </div>
             {% endfor %}
 
         </div>
