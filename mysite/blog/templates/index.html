@@ -14,21 +14,27 @@ Welcome to Blog
 
             <!-- Botão para criação de post, aparece apenas para usuários logados -->
             {% if user.is_authenticated %}
-            <div class="mb-4">
+            <div class="mb-4 text-right">
                 <a href="{% url 'blog:create_post' %}" class="btn btn-primary">Create New Post</a>
             </div>
             {% endif %}
 
             <!-- Exibindo as postagens -->
             {% for post in posts %}
-            <div class="col-12">
-                <h1>
-                    <a class="text-dark" href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-                </h1>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2>
+                        <a class="text-dark text-decoration-none" href="{{ post.get_absolute_url }}">
+                            {{ post.title }}
+                        </a>
+                    </h2>
+                    <p class="text-muted">Publicado por {{ post.author }} em {{ post.publish|date:"d M Y" }}</p>
+                    <p>{{ post.excerpt }}</p>
+                    <a href="{{ post.get_absolute_url }}" class="btn btn-outline-primary btn-sm">Leia mais</a>
+                </div>
             </div>
-            <div class="col-12">
-                <p>{{ post.excerpt }}</p>
-            </div>
+            {% empty %}
+            <p class="text-muted text-center">Nenhum post publicado ainda.</p>
             {% endfor %}
 
         </div>
