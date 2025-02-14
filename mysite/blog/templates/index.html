@@ -30,7 +30,8 @@ Welcome to Blog
                     </h2>
                     <p class="text-muted">Publicado por {{ post.author }} em {{ post.publish|date:"d M Y" }}</p>
                     <p>{{ post.excerpt }}</p>
-                    <a href="{{ post.get_absolute_url }}" class="btn btn-outline-primary btn-sm">Leia mais</a>
+                    <a href="{{ post.get_absolute_url }}" class="btn btn-outline-primary btn-sm">👀 Leia mais</a>
+                    <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-outline-primary btn-sm">✏️ Editar</a>
                 </div>
             </div>
             {% empty %}
@@ -44,3 +45,6 @@ Welcome to Blog
 </div>
 
 {% endblock %}
+
+
+<!-- os botoes estao de tamanhos diferentes-->
