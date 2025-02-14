@@ -1,23 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>User Posts</title>
-</head>
-<body>
-
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h2>Your Posts</h2>
+  <h2>Seus Posts</h2>
   <ul>
     {% for post in posts %}
-      <li><a href="{% url 'blog:post_single' post.slug %}">{{ post.title }}</a></li>
+      <li> <!-- links nao aparecem na tela de postagem -->
+        <a href="{% url 'blog:post_single' post.slug %}">{{ post.title }}</a> |
+        <a href="{% url 'blog:edit_post' post.slug %}">Editar</a>
+      </li>
     {% empty %}
-      <li>You haven't published any posts yet.</li>
+      <li>Você ainda não publicou nenhum post.</li>
     {% endfor %}
   </ul>
 {% endblock %}
-
-</body>
-</html>
