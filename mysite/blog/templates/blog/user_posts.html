@@ -5,8 +5,10 @@
   <ul>
     {% for post in posts %}
       <li> <!-- links nao aparecem na tela de postagem -->
+        <h1>{{ post.title }}</h1> 
         <a href="{% url 'blog:post_single' post.slug %}">{{ post.title }}</a> |
-        <a href="{% url 'blog:edit_post' post.slug %}">Editar</a>
+        <a href="{% url 'blog:edit_post' post.slug %}">Editar</a>        
+        
       </li>
     {% empty %}
       <li>Você ainda não publicou nenhum post.</li>
@@ -17,3 +19,4 @@
 
 
 <!-- Verificar tudo q n aparece dentro do bloco -->
+ 
