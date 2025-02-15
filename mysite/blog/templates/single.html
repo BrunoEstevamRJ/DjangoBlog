@@ -1,24 +1,25 @@
 {% extends "base.html" %}
 
 {% block title %}
-{{post.title}}
+{{ post.title }}
 {% endblock %}
 
 {% block content %}
-
 <div class="container">
-
     <div class="row justify-content-md-center pt-5">
-
         <div class="col-md-8">
+            <h1 class="mb-3">{{ post.title }}</h1>
+            <div class="col-12"><p>{{ post.content|safe }}</p></div>
 
-            <div class="col-12"><h1>{{post.title}}</h1></div>
-            <div class="col-12"><p>{{post.content|safe}}</p></div>
-
+            <!-- Botões de Voltar e Editar -->
+            <div class="mt-4 d-flex justify-content-between">
+                <a href="{% url 'blog:homepage' %}" class="btn btn-outline-secondary">← Voltar</a>
+                
+                {% if user == post.author %}
+                    <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-outline-primary">✏️ Editar</a>
+                {% endif %}
+            </div>
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}

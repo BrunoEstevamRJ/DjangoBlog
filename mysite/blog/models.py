@@ -40,7 +40,7 @@ class Post(models.Model):
         return reverse('blog:post_single', args=[self.slug])
 
     class Meta:
-        ordering = ('publish',)
+        ordering = ('-publish',)
 
     def __str__(self):
         return self.title

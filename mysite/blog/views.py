@@ -13,7 +13,7 @@ from .forms import PostForm
 
 # Página inicial com todos os posts publicados
 def home(request):
-    all_posts = Post.objects.filter(status='published')
+    all_posts = Post.objects.filter(status='published').order_by('-publish')
     return render(request, 'index.html', {'posts': all_posts})
 
 
