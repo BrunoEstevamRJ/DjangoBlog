@@ -1,26 +1,40 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="text-center">Editar Postagem</h2>
+<div class="container pt-5">
 
-    {% if messages %}
-        <div class="alert alert-success" role="alert">
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-        </div>
-    {% endif %}
+    <div class="row justify-content-md-center">
+        <div class="col-md-8">
+            
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    
+                    <h2 class="text-center text-primary">Editar Postagem</h2>
 
-    <form method="POST" class="mt-3">
-        {% csrf_token %}
-        <div class="mb-3">
-            {{ form.as_p }}
+                    {% if messages %}
+                        <div class="alert alert-success" role="alert">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <form method="POST" class="mt-3">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            {{ form.as_p }}
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                            <a href="{% url 'blog:post_single' post.slug %}" class="btn btn-secondary">❌ Cancelar</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
         </div>
-        <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-success">Salvar Alterações</button>
-            <a href="{% url 'blog:post_single' post.slug %}" class="btn btn-danger">Cancelar</a>
-        </div>
-    </form>
+    </div>
+
 </div>
 {% endblock %}
