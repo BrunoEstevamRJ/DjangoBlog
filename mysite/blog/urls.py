@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from .views import SignUpView, PostCreateView, edit_post, post_single
+from django.contrib.auth.views import LogoutView
 
 app_name = 'blog'
 
@@ -17,6 +18,6 @@ urlpatterns = [
     
     path('<slug:post_slug>/edit/', views.edit_post, name='edit_post'),
     path('<slug:post>/', views.post_single, name='post_single'), # verificar <slug:post> & <slug:post_slug>
-    
+    path('accounts/logout/', LogoutView.as_view(next_page='blog:homepage'), name='logout'),
 
 ]
