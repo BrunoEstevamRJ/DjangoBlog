@@ -1,0 +1,12 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Logout{% endblock %}
+
+{% block content %}
+    <div class="container text-center">
+        <h2>Você saiu da sua conta</h2>
+        <p>Se deseja fazer login novamente, clique abaixo:</p>
+        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+        <a href="{% url 'blog:homepage' %}" class="btn btn-secondary">Voltar para Home</a>
+    </div>
+{% endblock %}
