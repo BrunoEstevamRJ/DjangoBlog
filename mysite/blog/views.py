@@ -38,22 +38,37 @@ def profile(request):
 
 # Edição de perfil do usuário logado
 @login_required
-def edit_profile(request):
+def edit_post(request, post_slug):
+    post = get_object_or_404(Post, slug=post_slug)
+
+    if post.author != request.user:
+        messages.error(request, "Você não tem permissão para editar este post.")
+        return redirect("blog:user_posts")
+
     if request.method == 'POST':
-        form = UserChangeForm(request.POST, instance=request.user)
+        form = PostForm(request.POST, instance=post)
         if form.is_valid():
             form.save()
-            return redirect('profile')
+            messages.success(request, "Postagem atualizada com sucesso!")
+            return redirect('blog:post_single', post_slug=post.slug)
+
     else:
-        form = UserChangeForm(instance=request.user)
-    return render(request, 'registration/edit_profile.html', {'form': form})
+        form = PostForm(instance=post)
+
+    return render(request, 'blog/edit_post.html', {'form': form, 'post': post})
 
 
 # Listar posts do usuário logado
 @login_required
 def user_posts(request):
-    posts = Post.objects.filter(author=request.user, status='published')
-    return render(request, 'blog/user_posts.html', {'posts': posts})
+    posts_published = Post.objects.filter(author=request.user, status='published')
+    posts_drafts = Post.objects.filter(author=request.user, status='draft')  # Se houver rascunhos
+
+    return render(request, 'blog/user_posts.html', {
+        'posts_published': posts_published,
+        'posts_drafts': posts_drafts
+    })
+
 
 
 # Criar um novo post
@@ -78,8 +93,21 @@ def edit_post(request, post_slug):
             form.save()
             messages.success(request, "Postagem atualizada com sucesso!")
             return redirect('blog:post_single', post_slug=post.slug)
-
     else:
         form = PostForm(instance=post)
 
     return render(request, 'blog/edit_post.html', {'form': form, 'post': post})
+
+
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = UserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Perfil atualizado com sucesso!")
+            return redirect('blog:profile')
+    else:
+        form = UserChangeForm(instance=request.user)
+    return render(request, 'registration/edit_profile.html', {'form': form})
