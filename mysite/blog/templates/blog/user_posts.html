@@ -1,10 +1,12 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h2>Seus Posts</h2>
+  <h2>Suas Postagens</h2>
+
+  <h3>Publicados</h3>
   <ul>
-    {% for post in posts %}
-      <li> <!-- links nao aparecem na tela de postagem -->
+    {% for post in posts_published %}
+      <li>
         <a href="{% url 'blog:post_single' post.slug %}">{{ post.title }}</a> |
         <a href="{% url 'blog:edit_post' post.slug %}">Editar</a>
       </li>
@@ -12,8 +14,15 @@
       <li>Você ainda não publicou nenhum post.</li>
     {% endfor %}
   </ul>
+
+  <h3>Rascunhos</h3>
+  <ul>
+    {% for post in posts_drafts %}
+      <li>
+        <a href="{% url 'blog:edit_post' post.slug %}">{{ post.title }}</a> (rascunho)
+      </li>
+    {% empty %}
+      <li>Você não tem rascunhos.</li>
+    {% endfor %}
+  </ul>
 {% endblock %}
-
-
-
-<!-- Verificar tudo q n aparece dentro do bloco -->
