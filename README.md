@@ -25,16 +25,16 @@ Antes de começar, você precisará ter instalado:
 
 📦 Instalação
 
-    Clone o repositório:
+Clone o repositório:
 
-git clone https://github.com/seu-usuario/django-blog.git
-cd django-blog
+git clone https://github.com/BrunoEstevamRJ/DjangoBlog.git
+cd DjangoBlog
 
 Crie um ambiente virtual e ative:
 
-python -m venv venv
-source venv/bin/activate  # Linux/macOS
-venv\Scripts\activate  # Windows
+python -m venv venv  
+source venv/bin/activate  # Linux/macOS  
+venv\Scripts\activate  # Windows  
 
 Instale as dependências:
 
@@ -50,26 +50,25 @@ python manage.py createsuperuser
 
 Inicie o servidor local:
 
-    python manage.py runserver
+python manage.py runserver
 
-    Acesse o blog em http://127.0.0.1:8000/ 🚀
-
+Acesse o blog em http://127.0.0.1:8000/ 🚀
 🏗 Estrutura do projeto
 
-django-blog/
-│── blog/                  # App principal
-│   ├── templates/         # Arquivos HTML
-│   ├── static/            # CSS, JS, Imagens
-│   ├── models.py          # Modelo de Post
-│   ├── views.py           # Lógica das páginas
-│   ├── urls.py            # Rotas do blog
-│   ├── forms.py           # Formulários de postagens
-│── mysite/                # Configuração do projeto
-│   ├── settings.py        # Configurações do Django
-│   ├── urls.py            # Rotas principais
-│── db.sqlite3             # Banco de dados SQLite (padrão)
-│── manage.py              # Gerenciador do Django
-│── requirements.txt       # Dependências do projeto
+DjangoBlog/
+│── blog/                  # App principal  
+│   ├── templates/         # Arquivos HTML  
+│   ├── static/            # CSS, JS, Imagens  
+│   ├── models.py          # Modelo de Post  
+│   ├── views.py           # Lógica das páginas  
+│   ├── urls.py            # Rotas do blog  
+│   ├── forms.py           # Formulários de postagens  
+│── mysite/                # Configuração do projeto  
+│   ├── settings.py        # Configurações do Django  
+│   ├── urls.py            # Rotas principais  
+│── db.sqlite3             # Banco de dados SQLite (padrão)  
+│── manage.py              # Gerenciador do Django  
+│── requirements.txt       # Dependências do projeto  
 
 📌 Melhorias futuras
 
@@ -79,13 +78,22 @@ django-blog/
 
 🤝 Contribuindo
 
-Se quiser contribuir:
+Se você quiser contribuir com melhorias:
 
-    Faça um fork do repositório
-    Crie uma branch para sua feature (git checkout -b DjangoBlog)
-    Faça o commit (git commit -m 'Adiciona nova funcionalidade')
-    Suba as mudanças (git push origin DjangoBlog)
-    Abra um Pull Request 🎉
+    Crie uma branch para sua feature:
+
+git checkout -b minha-nova-feature
+
+    Faça as alterações e commite:
+
+git add .
+git commit -m 'Adiciona nova funcionalidade'
+
+    Envie as alterações para o seu repositório:
+
+git push origin minha-nova-feature
+
+    Abra um Pull Request no repositório DjangoBlog 🎉
 
 📜 Licença
 
