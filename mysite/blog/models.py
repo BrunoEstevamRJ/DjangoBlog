@@ -24,6 +24,14 @@ class Post(models.Model):
     status = models.CharField(max_length=10, choices=options, default='draft')
     objects = models.Manager()
     newmanager = NewManager()
+    likes = models.ManyToManyField(User, related_name='post_likes', blank=True)
+    dislikes = models.ManyToManyField(User, related_name='post_dislikes', blank=True)
+
+    def total_likes(self):
+        return self.likes.count()
+
+    def total_dislikes(self):
+        return self.dislikes.count()
 
     def save(self, *args, **kwargs):
         if not self.slug:
