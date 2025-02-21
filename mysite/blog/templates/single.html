@@ -9,17 +9,72 @@
     <div class="row justify-content-md-center pt-5">
         <div class="col-md-8">
             <h1 class="mb-3">{{ post.title }}</h1>
-            <div class="col-12"><p>{{ post.content|safe }}</p></div>
+            <div class="col-12">
+                <p>{{ post.content|safe }}</p>
+            </div>
+
+            <!-- Botões de Like e Dislike com AJAX -->
+            <button class="btn btn-success like-btn" data-slug="{{ post.slug }}">
+                👍 Like (<span class="like-count">{{ post.total_likes }}</span>)
+            </button>
+            <button class="btn btn-danger dislike-btn" data-slug="{{ post.slug }}">
+                👎 Dislike (<span class="dislike-count">{{ post.total_dislikes }}</span>)
+            </button>
 
             <!-- Botões de Voltar e Editar -->
             <div class="mt-4 d-flex justify-content-between">
                 <a href="{% url 'blog:homepage' %}" class="btn btn-outline-secondary">← Voltar</a>
-                
+
                 {% if user == post.author %}
-                    <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-outline-primary">✏️ Editar</a>
+                <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-outline-primary">✏️ Editar</a>
                 {% endif %}
             </div>
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Função para o botão de like
+        $('.like-btn').on('click', function(e) {
+            e.preventDefault();
+            var slug = $(this).data('slug');
+            var url = `/` + slug + `/like/`;
+            var csrfToken = '{{ csrf_token }}';
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                success: function(response) {
+                    $('.like-count').text(response.total_likes);
+                    $('.dislike-count').text(response.total_dislikes);
+                }
+            });
+        });
+
+        // Função para o botão de dislike
+        $('.dislike-btn').on('click', function(e) {
+            e.preventDefault();
+            var slug = $(this).data('slug');
+            var url = `/` + slug + `/dislike/`;
+            var csrfToken = '{{ csrf_token }}';
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                success: function(response) {
+                    $('.like-count').text(response.total_likes);
+                    $('.dislike-count').text(response.total_dislikes);
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}
