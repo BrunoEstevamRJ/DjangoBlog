@@ -21,5 +21,9 @@ urlpatterns = [
     
     path('<slug:post_slug>/edit/', views.edit_post, name='edit_post'),
     path('<slug:post>/', views.post_single, name='post_single'), # verificar <slug:post> & <slug:post_slug>
+    
+    path('<slug:post_slug>/like/', views.like_post, name='like_post'),
+    path('<slug:post_slug>/dislike/', views.dislike_post, name='dislike_post'),
+
 
 ]

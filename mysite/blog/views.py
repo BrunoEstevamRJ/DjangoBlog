@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib import messages
+from django.http import JsonResponse
 
 from .models import Post
 from .forms import PostForm
@@ -83,6 +84,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+# Editar postagem
 @login_required
 def edit_post(request, post_slug):
     post = get_object_or_404(Post, slug=post_slug, author=request.user)
@@ -99,7 +101,7 @@ def edit_post(request, post_slug):
     return render(request, 'blog/edit_post.html', {'form': form, 'post': post})
 
 
-
+# Editar o perfil
 @login_required
 def edit_profile(request):
     if request.method == 'POST':
@@ -111,3 +113,40 @@ def edit_profile(request):
     else:
         form = UserChangeForm(instance=request.user)
     return render(request, 'registration/edit_profile.html', {'form': form})
+
+
+# Like na postagem 
+@login_required
+def like_post(request, post_slug):
+    post = get_object_or_404(Post, slug=post_slug)
+    if request.user in post.dislikes.all():
+        post.dislikes.remove(request.user)
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+        liked = False
+    else:
+        post.likes.add(request.user)
+        liked = True
+    return JsonResponse({
+        'liked': liked,
+        'total_likes': post.total_likes(),
+        'total_dislikes': post.total_dislikes()
+    })
+
+# Deslike na postagem
+@login_required
+def dislike_post(request, post_slug):
+    post = get_object_or_404(Post, slug=post_slug)
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+    if request.user in post.dislikes.all():
+        post.dislikes.remove(request.user)
+        disliked = False
+    else:
+        post.dislikes.add(request.user)
+        disliked = True
+    return JsonResponse({
+        'disliked': disliked,
+        'total_likes': post.total_likes(),
+        'total_dislikes': post.total_dislikes()
+    })
