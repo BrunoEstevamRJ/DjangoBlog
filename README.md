@@ -82,9 +82,9 @@ django-blog/
 Se quiser contribuir:
 
     Faça um fork do repositório
-    Crie uma branch para sua feature (git checkout -b minha-feature)
+    Crie uma branch para sua feature (git checkout -b DjangoBlog)
     Faça o commit (git commit -m 'Adiciona nova funcionalidade')
-    Suba as mudanças (git push origin minha-feature)
+    Suba as mudanças (git push origin DjangoBlog)
     Abra um Pull Request 🎉
 
 📜 Licença
