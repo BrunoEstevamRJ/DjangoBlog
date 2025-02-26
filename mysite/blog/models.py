@@ -26,6 +26,7 @@ class Post(models.Model):
     newmanager = NewManager()
     likes = models.ManyToManyField(User, related_name='post_likes', blank=True)
     dislikes = models.ManyToManyField(User, related_name='post_dislikes', blank=True)
+    image = models.ImageField(upload_to='post_images/', blank=True, null= True)
 
     def total_likes(self):
         return self.likes.count()
