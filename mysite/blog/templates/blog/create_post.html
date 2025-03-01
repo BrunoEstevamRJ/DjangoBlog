@@ -11,9 +11,10 @@ Criar Nova Postagem
             <div class="card p-4 shadow-sm">
                 <h2 class="mb-4 text-center">Criar Nova Postagem</h2>
 
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
 
+                    <!-- Renderiza cada campo individualmente -->
                     {% for field in form %}
                         <div class="mb-3">
                             <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
@@ -27,11 +28,13 @@ Criar Nova Postagem
                         </div>
                     {% endfor %}
 
+                    <!-- Botões de Ação -->
                     <div class="d-flex justify-content-between">
                         <a href="{% url 'blog:homepage' %}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-success">Publicar</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>

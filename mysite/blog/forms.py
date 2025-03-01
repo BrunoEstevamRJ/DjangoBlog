@@ -1,6 +1,7 @@
 from django import forms
-from .models import Post
+from .models import Post, Comment  # Importando Comment
 
+# Formulário para Postagens
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -16,3 +17,13 @@ class PostForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if not self.instance.pk:
             self.fields['status'].initial = 'published'
+
+
+# Formulário para comentários
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Escreva um comentário...'}),
+        }

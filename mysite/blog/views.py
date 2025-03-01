@@ -8,8 +8,8 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib import messages
 from django.http import JsonResponse
 
-from .models import Post
-from .forms import PostForm
+from .models import Post, Comment
+from .forms import PostForm, CommentForm
 
 
 # Página inicial com todos os posts publicados
@@ -19,9 +19,28 @@ def home(request):
 
 
 # Página de detalhes de um post
-def post_single(request, post):
-    post = get_object_or_404(Post, slug=post, status='published')
-    return render(request, 'single.html', {'post': post})
+def post_single(request, post_slug):
+    post = get_object_or_404(Post, slug=post_slug)
+    comments = Comment.objects.filter(post=post).order_by('-created_at')
+
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            messages.success(request, "Comentário adicionado com sucesso!")
+            return redirect('blog:post_single', post_slug=post.slug)
+    else:
+        comment_form = CommentForm()
+
+    return render(request, 'blog/post_single.html', {
+        'post': post,
+        'comments': comments,
+        'comment_form': comment_form
+    })
+
 
 
 # View de cadastro de usuário (signup)
@@ -50,8 +69,9 @@ def edit_post(request, post_slug):
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
             form.save()
-            messages.success(request, "Postagem atualizada com sucesso!")
+            messages.success(request, "Postagem atualizada com sucesso!")            
             return redirect('blog:post_single', post_slug=post.slug)
+
 
     else:
         form = PostForm(instance=post)
@@ -90,15 +110,18 @@ def edit_post(request, post_slug):
     post = get_object_or_404(Post, slug=post_slug, author=request.user)
 
     if request.method == 'POST':
-        form = PostForm(request.POST, instance=post)
+        form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
-            messages.success(request, "Postagem atualizada com sucesso!")
+            messages.success(request, "Postagem atualizada com sucesso!")            
+            #return redirect('blog:post_single', post_slug=post.slug) erro de redirecionamento
+
+            # solução temporaria
             return redirect('blog:post_single', post_slug=post.slug)
     else:
         form = PostForm(instance=post)
 
-    return render(request, 'blog/edit_post.html', {'form': form, 'post': post})
+    return render(request, 'blog/edit_post.html', {'form': form, 'post': post})    
 
 
 # Editar o perfil
@@ -150,3 +173,24 @@ def dislike_post(request, post_slug):
         'total_likes': post.total_likes(),
         'total_dislikes': post.total_dislikes()
     })
+
+
+def add_comment(request, post_slug):
+    post = get_object_or_404(Post, slug=post_slug)
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            
+            return JsonResponse({
+                "author": comment.author.username,
+                "content": comment.content,
+                "created_at": comment.created_at.strftime("%d/%m/%Y %H:%M"),
+                "total_comments": post.comments.count()
+            })
+    
+    return redirect('blog:post_single', post_slug=post.slug)
