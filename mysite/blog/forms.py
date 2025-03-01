@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, Comment  # Importando Comment
+from .models import Post, Comment
 
 # Formulário para Postagens
 class PostForm(forms.ModelForm):
