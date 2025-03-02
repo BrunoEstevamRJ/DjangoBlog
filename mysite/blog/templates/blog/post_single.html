@@ -43,6 +43,9 @@
                 <div class="card-body">
                     <p><strong>{{ comment.author }}</strong> disse em {{ comment.created_at }}:</p>
                     <p>{{ comment.content }}</p>
+                    {% if user == comment.author %}
+                    <button class="btn btn-sm btn-danger delete-comment" data-id="{{ comment.id }}">🗑️ Apagar</button>
+                    {% endif %}
                 </div>
             </div>
             {% empty %}
@@ -79,7 +82,8 @@
         $('.like-btn').on('click', function (e) {
             e.preventDefault();
             var slug = $(this).data('slug');
-            var url = / + slug + /like/;
+            var url = "/" + slug + "/like/";
+
             var csrfToken = '{{ csrf_token }}';
 
             $.ajax({
@@ -99,7 +103,7 @@
         $('.dislike-btn').on('click', function (e) {
             e.preventDefault();
             var slug = $(this).data('slug');
-            var url = / + slug + /dislike/;
+            var url = "/" + slug + "/dislike/";
             var csrfToken = '{{ csrf_token }}';
 
             $.ajax({

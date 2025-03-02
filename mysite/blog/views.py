@@ -194,3 +194,16 @@ def add_comment(request, post_slug):
             })
     
     return redirect('blog:post_single', post_slug=post.slug)
+
+
+# View to delete a comment incomming
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if request.user == comment.author:
+        comment.delete()
+        return JsonResponse({'success': True})
+    
+    return JsonResponse({'success': False, 'error': 'Você não tem permissão para apagar este comentário.'})
+
