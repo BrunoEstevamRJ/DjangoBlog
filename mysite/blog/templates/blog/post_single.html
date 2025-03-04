@@ -6,33 +6,63 @@
 
 {% block content %}
 <div class="container">
+
+    <!-- Botão de Voltar abaixo -->
+    <br>
+    <div class="d-flex justify-content-start mb-3">
+        <a href="{% url 'blog:homepage' %}" class="btn btn-outline-secondary">↩️ Voltar</a>
+    </div>
+
     <div class="row justify-content-md-center pt-5">
-        <div class="col-md-8">
+        
+        <div class="col-md-8">             
+            
             <h1 class="mb-3">{{ post.title }}</h1>
+            
             <div class="col-12">
-                <p>{{ post.content|safe }}</p>
+                <p>{{ post.content|safe }}</p>                
 
                 {% if post.image %}
                 <img src="{{ post.image.url }}" class="img-fluid" alt="{{ post.title }}">
                 {% endif %}
             </div>
 
+            <div class="d-flex flex-wrap gap-2 justify-content-center mt-4">
+                <button class="btn btn-success like-btn w-25" data-slug="{{ post.slug }}">
+                    👍 Like (<span class="like-count">{{ post.total_likes }}</span>)
+                </button>
+
+                <button class="btn btn-danger dislike-btn w-25" data-slug="{{ post.slug }}">
+                    👎 Dislike (<span class="dislike-count">{{ post.total_dislikes }}</span>)
+                </button>
+
+                {% if user == post.author %}
+                <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-outline-primary w-25">✏️ Editar</a>
+                {% endif %}
+            </div>
+
+           
+            
+
+
+
             <!-- Botões de Like e Dislike com AJAX -->
-            <button class="btn btn-success like-btn" data-slug="{{ post.slug }}">
+            <!-- <button class="btn btn-success like-btn" data-slug="{{ post.slug }}">
                 👍 Like (<span class="like-count">{{ post.total_likes }}</span>)
             </button>
             <button class="btn btn-danger dislike-btn" data-slug="{{ post.slug }}">
                 👎 Dislike (<span class="dislike-count">{{ post.total_dislikes }}</span>)
-            </button>
+            </button> -->
 
             <!-- Botões de Voltar e Editar -->
-            <div class="mt-4 d-flex justify-content-between">
+            <!-- <div class="mt-4 d-flex justify-content-between">
                 <a href="{% url 'blog:homepage' %}" class="btn btn-outline-secondary">← Voltar</a>
 
                 {% if user == post.author %}
                 <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-outline-primary">✏️ Editar</a>
                 {% endif %}
-            </div>
+            </div> -->
+
 
             <hr>
 
