@@ -4,6 +4,7 @@ from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib import messages
 from django.http import JsonResponse
@@ -16,7 +17,7 @@ from .forms import PostForm, CommentForm
 def home(request):
     all_posts = Post.objects.filter(status='published').order_by('-publish')
     return render(request, 'index.html', {'posts': all_posts})
-
+    
 
 # Página de detalhes de um post
 def post_single(request, post_slug):
