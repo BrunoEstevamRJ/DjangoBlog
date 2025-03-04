@@ -20,7 +20,6 @@ urlpatterns = [
     path('my-posts/', views.user_posts, name='user_posts'),
 
     path('<slug:post_slug>/', post_single, name='post_single'),
-    path('<slug:post_slug>/comment/', add_comment, name='add_comment'),
 
     # Rotas do Post
     path('<slug:post_slug>/', views.post_single, name='post_single'),

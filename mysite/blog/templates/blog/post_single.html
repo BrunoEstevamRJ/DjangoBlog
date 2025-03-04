@@ -39,18 +39,23 @@
             <!-- Seção de Comentários -->
             <h2>Comentários</h2>
             {% for comment in comments %}
-            <div class="card my-3">
+            <div class="card my-3" id="comment-{{ comment.id }}">
                 <div class="card-body">
                     <p><strong>{{ comment.author }}</strong> disse em {{ comment.created_at }}:</p>
                     <p>{{ comment.content }}</p>
                     {% if user == comment.author %}
-                    <button class="btn btn-sm btn-danger delete-comment" data-id="{{ comment.id }}">🗑️ Apagar</button>
+                    <button class="btn btn-sm btn-danger delete-comment" data-id="{{ comment.id }}"
+                        data-url="{% url 'blog:delete_comment' comment.id %}">
+                        🗑️ Apagar
+                    </button>
+
                     {% endif %}
                 </div>
             </div>
             {% empty %}
             <p>Sem comentários ainda. Seja o primeiro a comentar!</p>
             {% endfor %}
+
 
             <hr>
 
@@ -75,6 +80,44 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".delete-comment").on("click", function () {
+            var button = $(this);
+            var commentId = button.data("id");
+            var deleteUrl = button.data("url"); // Obtendo a URL diretamente do botão
+            var csrfToken = "{{ csrf_token }}";
+
+            if (!confirm("Tem certeza que deseja excluir este comentário?")) {
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: deleteUrl,  // Usando a URL do botão
+                headers: {
+                    "X-CSRFToken": csrfToken
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $("#comment-" + commentId).fadeOut(500, function () {
+                            $(this).remove();
+                        });
+                    } else {
+                        alert("Erro: " + response.error);
+                    }
+                },
+                error: function () {
+                    alert("Ocorreu um erro ao tentar apagar o comentário.");
+                }
+            });
+        });
+    });
+</script>
+
+
+<!-- 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -119,5 +162,5 @@
             });
         });
     });
-</script>
+</script> -->
 {% endblock %}
