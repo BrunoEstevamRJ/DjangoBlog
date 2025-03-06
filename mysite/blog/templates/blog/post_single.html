@@ -116,7 +116,47 @@
                 }
             });
         });
+        // Função para o botão de like
+        $('.like-btn').on('click', function(e) {
+            e.preventDefault();
+            var slug = $(this).data('slug');
+            var url = `/` + slug + `/like/`;
+            var csrfToken = '{{ csrf_token }}';
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                success: function(response) {
+                    $('.like-count').text(response.total_likes);
+                    $('.dislike-count').text(response.total_dislikes);
+                }
+            });
+        });
+
+        // Função para o botão de dislike
+        $('.dislike-btn').on('click', function(e) {
+            e.preventDefault();
+            var slug = $(this).data('slug');
+            var url = `/` + slug + `/dislike/`;
+            var csrfToken = '{{ csrf_token }}';
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                success: function(response) {
+                    $('.like-count').text(response.total_likes);
+                    $('.dislike-count').text(response.total_dislikes);
+                }
+            });
+        });
     });
+    
 </script>
 
 {% endblock %}

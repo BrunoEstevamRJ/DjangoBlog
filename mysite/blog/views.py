@@ -140,7 +140,25 @@ def edit_profile(request):
         form = UserChangeForm(instance=request.user)
     return render(request, 'registration/edit_profile.html', {'form': form})
 
+
 # Like na Postagem
+@login_required
+def like_post(request, post_slug):
+    post = get_object_or_404(Post, slug=post_slug)
+    if request.user in post.dislikes.all():
+        post.dislikes.remove(request.user)
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+        liked = False
+    else:
+        post.likes.add(request.user)
+        liked = True
+    return JsonResponse({
+        'liked': liked,
+        'total_likes': post.total_likes(),
+        'total_dislikes': post.total_dislikes()
+    })
+""" 
 @login_required
 def like_post(request, post_slug):
     post = get_object_or_404(Post, slug=post_slug)
@@ -157,12 +175,33 @@ def like_post(request, post_slug):
 
     return JsonResponse({
         'liked': liked,
+        
         'total_likes': post.likes.count(),
         'total_dislikes': post.dislikes.count()
+
+        'total_likes': post.total_likes(),
+        'post_dislikes':post.total_dislikes(),
     })
 
-
+ """
 # Deslike na Postagem
+@login_required
+def dislike_post(request, post_slug):
+    post = get_object_or_404(Post, slug=post_slug)
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+    if request.user in post.dislikes.all():
+        post.dislikes.remove(request.user)
+        disliked = False
+    else:
+        post.dislikes.add(request.user)
+        disliked = True
+    return JsonResponse({
+        'disliked': disliked,
+        'total_likes': post.total_likes(),
+        'total_dislikes': post.total_dislikes()
+    })
+""" 
 @login_required
 def dislike_post(request, post_slug):
     post = get_object_or_404(Post, slug=post_slug)
@@ -182,7 +221,7 @@ def dislike_post(request, post_slug):
         'total_likes': post.likes.count(),
         'total_dislikes': post.dislikes.count()
     })
-
+ """
 def add_comment(request, post_slug):
     post = get_object_or_404(Post, slug=post_slug)
 
@@ -204,7 +243,7 @@ def add_comment(request, post_slug):
     return redirect('blog:post_single', post_slug=post.slug)
 
 
-# View to delete a comment incomming
+# Comment Delete
 @login_required
 def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
