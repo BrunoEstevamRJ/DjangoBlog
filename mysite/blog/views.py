@@ -158,32 +158,8 @@ def like_post(request, post_slug):
         'total_likes': post.total_likes(),
         'total_dislikes': post.total_dislikes()
     })
-""" 
-@login_required
-def like_post(request, post_slug):
-    post = get_object_or_404(Post, slug=post_slug)
 
-    if request.user in post.likes.all():
-        post.likes.remove(request.user)  # Remove o like
-        liked = False
-    else:
-        post.likes.add(request.user)  # Adiciona o like
-        post.dislikes.remove(request.user)  # Remove dislike se existir
-        liked = True
 
-    post.refresh_from_db()  # Atualiza os dados antes de enviar a resposta
-
-    return JsonResponse({
-        'liked': liked,
-        
-        'total_likes': post.likes.count(),
-        'total_dislikes': post.dislikes.count()
-
-        'total_likes': post.total_likes(),
-        'post_dislikes':post.total_dislikes(),
-    })
-
- """
 # Deslike na Postagem
 @login_required
 def dislike_post(request, post_slug):
@@ -201,27 +177,9 @@ def dislike_post(request, post_slug):
         'total_likes': post.total_likes(),
         'total_dislikes': post.total_dislikes()
     })
-""" 
-@login_required
-def dislike_post(request, post_slug):
-    post = get_object_or_404(Post, slug=post_slug)
 
-    if request.user in post.dislikes.all():
-        post.dislikes.remove(request.user)  # Remove o dislike
-        disliked = False
-    else:
-        post.dislikes.add(request.user)  # Adiciona o dislike
-        post.likes.remove(request.user)  # Remove like se existir
-        disliked = True
 
-    post.refresh_from_db()  # Atualiza os dados antes de enviar a resposta
-
-    return JsonResponse({
-        'disliked': disliked,
-        'total_likes': post.likes.count(),
-        'total_dislikes': post.dislikes.count()
-    })
- """
+# Comment
 def add_comment(request, post_slug):
     post = get_object_or_404(Post, slug=post_slug)
 
@@ -254,12 +212,3 @@ def delete_comment(request, comment_id):
     
     return JsonResponse({'success': False, 'error': 'Você não tem permissão para apagar este comentário.'})
 
-
-""" 
-@login_required
-def delete_own_comment(request, message_id):
-    comment = get_object_or_404(comments.get_model(), pk=message_id,
-            site__pk=settings.SITE_ID)
-    if comment.user == request.user:
-        comment.is_removed = True
-        comment.save() """
