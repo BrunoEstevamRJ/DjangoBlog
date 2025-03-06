@@ -12,6 +12,8 @@ from django.http import JsonResponse
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
 
+from django.db.models import Count
+
 
 # Página inicial com todos os posts publicados
 def home(request):
@@ -138,43 +140,48 @@ def edit_profile(request):
         form = UserChangeForm(instance=request.user)
     return render(request, 'registration/edit_profile.html', {'form': form})
 
-
-# Like na postagem 
+# Like na Postagem
 @login_required
 def like_post(request, post_slug):
     post = get_object_or_404(Post, slug=post_slug)
-    if request.user in post.dislikes.all():
-        post.dislikes.remove(request.user)
+
     if request.user in post.likes.all():
-        post.likes.remove(request.user)
+        post.likes.remove(request.user)  # Remove o like
         liked = False
     else:
-        post.likes.add(request.user)
+        post.likes.add(request.user)  # Adiciona o like
+        post.dislikes.remove(request.user)  # Remove dislike se existir
         liked = True
+
+    post.refresh_from_db()  # Atualiza os dados antes de enviar a resposta
+
     return JsonResponse({
         'liked': liked,
-        'total_likes': post.total_likes(),
-        'total_dislikes': post.total_dislikes()
+        'total_likes': post.likes.count(),
+        'total_dislikes': post.dislikes.count()
     })
 
-# Deslike na postagem
+
+# Deslike na Postagem
 @login_required
 def dislike_post(request, post_slug):
     post = get_object_or_404(Post, slug=post_slug)
-    if request.user in post.likes.all():
-        post.likes.remove(request.user)
+
     if request.user in post.dislikes.all():
-        post.dislikes.remove(request.user)
+        post.dislikes.remove(request.user)  # Remove o dislike
         disliked = False
     else:
-        post.dislikes.add(request.user)
+        post.dislikes.add(request.user)  # Adiciona o dislike
+        post.likes.remove(request.user)  # Remove like se existir
         disliked = True
+
+    post.refresh_from_db()  # Atualiza os dados antes de enviar a resposta
+
     return JsonResponse({
         'disliked': disliked,
-        'total_likes': post.total_likes(),
-        'total_dislikes': post.total_dislikes()
+        'total_likes': post.likes.count(),
+        'total_dislikes': post.dislikes.count()
     })
-
 
 def add_comment(request, post_slug):
     post = get_object_or_404(Post, slug=post_slug)
