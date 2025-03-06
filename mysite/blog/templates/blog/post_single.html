@@ -14,13 +14,13 @@
     </div>
 
     <div class="row justify-content-md-center pt-5">
-        
-        <div class="col-md-8">             
-            
+
+        <div class="col-md-8">
+
             <h1 class="mb-3">{{ post.title }}</h1>
-            
+
             <div class="col-12">
-                <p>{{ post.content|safe }}</p>                
+                <p>{{ post.content|safe }}</p>
 
                 {% if post.image %}
                 <img src="{{ post.image.url }}" class="img-fluid" alt="{{ post.title }}">
@@ -28,17 +28,22 @@
             </div>
 
             <div class="d-flex flex-wrap gap-2 justify-content-center mt-4">
-                <button class="btn btn-success like-btn w-25" data-url="{% url 'blog:like_post' post.slug %}">
+                <button class="btn btn-success like-btn w-25" data-slug="{{ post.slug }}">
                     👍 Like (<span class="like-count">{{ post.total_likes }}</span>)
                 </button>
-                
-                <button class="btn btn-danger dislike-btn w-25" data-url="{% url 'blog:dislike_post' post.slug %}">
+
+                <button class="btn btn-danger dislike-btn w-25" data-slug="{{ post.slug }}">
                     👎 Dislike (<span class="dislike-count">{{ post.total_dislikes }}</span>)
                 </button>
-                
+
                 {% if user == post.author %}
                 <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-outline-primary w-25">✏️ Editar</a>
                 {% endif %}
+
+                </form>
+
+
+
             </div>
 
             <hr>
@@ -117,10 +122,10 @@
             });
         });
         // Função para o botão de like
-        $('.like-btn').on('click', function(e) {
+        $('.like-btn').on('click', function (e) {
             e.preventDefault();
             var slug = $(this).data('slug');
-            var url = `/` + slug + `/like/`;
+            var url = "{% url 'blog:like_post' 'placeholder' %}".replace('placeholder', slug); // Usa o nome da URL do Django
             var csrfToken = '{{ csrf_token }}';
 
             $.ajax({
@@ -129,18 +134,22 @@
                 headers: {
                     'X-CSRFToken': csrfToken
                 },
-                success: function(response) {
+                success: function (response) {
                     $('.like-count').text(response.total_likes);
                     $('.dislike-count').text(response.total_dislikes);
+                    console.log(response); // Adicionado console.log
+                },
+                error: function (error) {
+                    console.log(error);
                 }
             });
         });
 
         // Função para o botão de dislike
-        $('.dislike-btn').on('click', function(e) {
+        $('.dislike-btn').on('click', function (e) {
             e.preventDefault();
             var slug = $(this).data('slug');
-            var url = `/` + slug + `/dislike/`;
+            var url = "{% url 'blog:dislike_post' 'placeholder' %}".replace('placeholder', slug); // Usa o nome da URL do Django
             var csrfToken = '{{ csrf_token }}';
 
             $.ajax({
@@ -149,14 +158,18 @@
                 headers: {
                     'X-CSRFToken': csrfToken
                 },
-                success: function(response) {
+                success: function (response) {
                     $('.like-count').text(response.total_likes);
                     $('.dislike-count').text(response.total_dislikes);
+                    console.log(response); // Adicionado console.log
+                },
+                error: function (error) {
+                    console.log(error);
                 }
             });
         });
     });
-    
+
 </script>
 
 {% endblock %}
