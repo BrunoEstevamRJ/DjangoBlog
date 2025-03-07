@@ -1,12 +1,26 @@
-<!-- blog/templates/registration/login.html -->
-{% extends 'base.html' %} {% block content %}
-<h2>Login</h2>
-<form method="post">
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit">Entrar</button>
-</form>
-<p>
-  Não tem uma conta?
-  <a href="{% url 'blog:signup' %}" class="btn btn-outline-primary">Cadastre-se</a>
-</p>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+    <h2 class="text-center mb-4">Login</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+      </div>
+      <div class="mb-3">
+        {{ form.password.label_tag }}
+        {{ form.password }}
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+    <p class="text-center mt-3">
+      Don't have an account?
+      <a href="{% url 'blog:signup' %}" class="btn btn-outline-primary btn-sm">Register</a>
+    </p>
+  </div>
+</div>
 {% endblock %}
+
