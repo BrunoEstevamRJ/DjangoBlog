@@ -1,3 +1,6 @@
+import random
+import string
+
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -17,7 +20,7 @@ class Post(models.Model):
 
     title = models.CharField(max_length=255)
     excerpt = models.TextField(null=True)
-    slug = models.SlugField(max_length=255, unique_for_date='publish', blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     publish = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
     content = models.TextField()
@@ -26,7 +29,7 @@ class Post(models.Model):
     newmanager = NewManager()
     likes = models.ManyToManyField(User, related_name='post_likes', blank=True)
     dislikes = models.ManyToManyField(User, related_name='post_dislikes', blank=True)
-    image = models.ImageField(upload_to='post_images/', blank=True, null= True)
+    image = models.ImageField(upload_to='post_images/', blank=True, null=True)
 
     def total_likes(self):
         return self.likes.count()
@@ -34,15 +37,20 @@ class Post(models.Model):
     def total_dislikes(self):
         return self.dislikes.count()
 
+    def generate_unique_slug(self):
+        """Gera um slug único, adicionando números aleatórios se necessário."""
+        base_slug = slugify(self.title)
+        unique_slug = base_slug
+
+        while Post.objects.filter(slug=unique_slug).exists():
+            random_number = ''.join(random.choices(string.digits, k=4))  # Gera um número aleatório de 4 dígitos
+            unique_slug = f"{base_slug}-{random_number}"
+
+        return unique_slug
+
     def save(self, *args, **kwargs):
         if not self.slug:
-            base_slug = slugify(self.title)
-            unique_slug = base_slug
-            count = 1
-            while Post.objects.filter(slug=unique_slug).exists():
-                unique_slug = f"{base_slug}-{count}"
-                count += 1
-            self.slug = unique_slug
+            self.slug = self.generate_unique_slug()
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
