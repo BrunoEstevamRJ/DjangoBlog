@@ -48,10 +48,17 @@ class Post(models.Model):
 
         return unique_slug
 
+  
+
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = self.generate_unique_slug()
+
+        self.content = self.content.replace("\r\n", "\n")  # Força quebra de linha
+
         super().save(*args, **kwargs)
+
 
     def get_absolute_url(self):
         return reverse('blog:post_single', args=[self.slug])
