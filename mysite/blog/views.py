@@ -8,6 +8,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib import messages
 from django.http import JsonResponse
+from django.contrib.auth.models import User
 
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
@@ -53,10 +54,7 @@ class SignUpView(generic.CreateView):
     template_name = 'registration/signup.html'
 
 
-# Página de perfil do usuário logado
-@login_required
-def profile(request):
-    return render(request, 'registration/profile.html', {'user': request.user})
+ 
 
 
 # Edição de perfil do usuário logado
@@ -129,16 +127,15 @@ def edit_post(request, post_slug):
 
 # Editar o perfil
 @login_required
+def profile(request, username):
+    user = get_object_or_404(User, username=username)
+    posts = Post.objects.filter(author=user, status="published")
+    return render(request, "registration/profile.html", {"user": user, "posts": posts})
+
+
+@login_required
 def edit_profile(request):
-    if request.method == 'POST':
-        form = UserChangeForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Perfil atualizado com sucesso!")
-            return redirect('blog:profile')
-    else:
-        form = UserChangeForm(instance=request.user)
-    return render(request, 'registration/edit_profile.html', {'form': form})
+    return render(request, 'blog/edit_profile.html')
 
 
 # Like na Postagem

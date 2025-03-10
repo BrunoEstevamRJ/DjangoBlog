@@ -22,7 +22,7 @@ urlpatterns = [
 
     # Profile
     path('accounts/profile', views.profile, name='profile'),
-    path('accounts/edit-profiles', views.edit_profile, name='edit-profile'),
+    path('accounts/edit-profiles/', views.edit_profile, name='edit-profile'),
 
     path('my-posts/', views.user_posts, name='user_posts'),
 

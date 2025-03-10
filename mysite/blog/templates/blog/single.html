@@ -5,6 +5,7 @@ block content %}
         <div class="col-md-8">
             <h1 class="mb-3">{{ post.title }}</h1>
             <div class="col-12">
+                <!-- Temporary Solution <pre> for postlinebreak -->
                 <pre>{{ post.content }}</pre>
                 {% if post.image %}
                     <img src="{{ post.image.url }}" class="img-fluid" alt="{{ post.title }}">
