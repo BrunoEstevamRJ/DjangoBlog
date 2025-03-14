@@ -21,7 +21,12 @@
                 {% if user.profile.age %}
                     <p><strong>Idade:</strong> {{ user.profile.age }}</p>
                 {% endif %}
+            
+                {% if user == request.user %}
+                    <a href="{% url 'blog:user_posts' %}" class="btn btn-outline-primary mt-2">📄 Minhas Postagens</a>
+                {% endif %}
             </div>
+            
         </div>
     </div>
 
@@ -39,3 +44,4 @@
     {% endif %}
 </div>
 {% endblock %}
+

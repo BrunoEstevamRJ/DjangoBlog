@@ -125,17 +125,6 @@ def edit_post(request, post_slug):
     return render(request, 'blog/edit_post.html', {'form': form, 'post': post})    
 
 
-# Editar o perfil
-@login_required
-def profile(request, username):
-    user = get_object_or_404(User, username=username)
-    posts = Post.objects.filter(author=user, status="published")
-    return render(request, "registration/profile.html", {"user": user, "posts": posts})
-
-
-@login_required
-def edit_profile(request):
-    return render(request, 'blog/edit_profile.html')
 
 
 # Like na Postagem

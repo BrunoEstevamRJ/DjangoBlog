@@ -33,9 +33,18 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">            
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
+
+
                 <li class="nav-item">
-                    <span class="navbar-text text-white mr-3">Bem-vindo, {{ user.username }}!</span>
+                    <span class="navbar-text text-white mr-3">
+                        Bem-vindo, <a href="{% url 'accounts:profile' user.username %}">{{ user.username }}</a>
+
+
+                    </span>
                 </li>
+
+
+                
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'blog:logout' %}"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

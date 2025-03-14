@@ -6,6 +6,8 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.text import slugify
+from accounts.models import Profile
+
 
 
 class Post(models.Model):
@@ -84,7 +86,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile_blog")
     bio = models.TextField(blank=True, null=True)
     age = models.PositiveIntegerField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to="profile_pics/", blank=True, null=True)

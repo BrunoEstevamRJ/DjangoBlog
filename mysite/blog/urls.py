@@ -1,8 +1,12 @@
-from django.urls import path
 from . import views
+
+from django.urls import path
+from accounts import views as accounts_views
+
 from .views import SignUpView, PostCreateView, edit_post, post_single, add_comment, delete_comment
 from django.contrib.auth.views import LogoutView, LoginView
 from django.urls import reverse_lazy
+from accounts.views import profile
 
 app_name = 'blog'
 
@@ -21,11 +25,11 @@ urlpatterns = [
     
 
     # Profile
-    path('accounts/profile', views.profile, name='profile'),
-    path('accounts/edit-profiles/', views.edit_profile, name='edit-profile'),
+    path('profile/<str:username>/', profile, name='profile'),
+    path('accounts/edit-profiles/', accounts_views.edit_profile, name='edit-profile'),
+
 
     path('my-posts/', views.user_posts, name='user_posts'),
-
     path('<slug:post_slug>/', post_single, name='post_single'),
 
     # Rotas do Post
