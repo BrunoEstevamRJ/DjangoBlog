@@ -18,8 +18,7 @@ urlpatterns = [
 
     # signup | login | logout  
     path('accounts/signup/', SignUpView.as_view(), name='signup'),
-    path('accounts/login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
-    #path('accounts/logout/', LogoutView.as_view(next_page='/accounts/login/'), name='logout'),
+    path('accounts/login/', LoginView.as_view(template_name='registration/login.html'), name='login'),    
     path('accounts/logout/', LogoutView.as_view(next_page=reverse_lazy('login')), name='logout'),
 
     

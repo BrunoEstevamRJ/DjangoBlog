@@ -6,8 +6,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls', namespace='blog')),
-    path('accounts/', include('accounts.urls', namespace='accounts')),  # Primeiro importa o app personalizado
-    path('accounts/', include('django.contrib.auth.urls')),  # Depois adiciona as URLs do Django Auth
+    path('accounts/', include('accounts.urls', namespace='accounts')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
 
