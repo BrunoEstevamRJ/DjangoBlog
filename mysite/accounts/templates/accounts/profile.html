@@ -8,10 +8,11 @@
         <div class="row">
             <div class="col-md-3 text-center">
                 {% if user.profile.profile_picture %}
-                    <img src="{{ user.profile.profile_picture.url }}" class="img-fluid rounded-circle" alt="Foto de perfil">
-                {% else %}
-                    <img src="https://via.placeholder.com/150" class="img-fluid rounded-circle" alt="Sem foto">
-                {% endif %}
+    <img src="{{ user.profile.profile_picture.url }}" class="img-fluid rounded-circle" alt="Foto de perfil">
+    {% else %}
+        <img src="https://via.placeholder.com/150" class="img-fluid rounded-circle" alt="Sem foto">
+    {% endif %}
+
             </div>
             <div class="col-md-9">
                 <h2>{{ user.username }}</h2>
@@ -44,3 +45,4 @@
     {% endif %}
 </div>
 {% endblock %}
+
