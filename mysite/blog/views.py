@@ -115,9 +115,6 @@ def edit_post(request, post_slug):
         if form.is_valid():
             form.save()
             messages.success(request, "Postagem atualizada com sucesso!")            
-            #return redirect('blog:post_single', post_slug=post.slug) erro de redirecionamento
-
-            # solução temporaria
             return redirect('blog:post_single', post_slug=post.slug)
     else:
         form = PostForm(instance=post)

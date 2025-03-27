@@ -6,8 +6,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.text import slugify
-from accounts.models import Profile
-
 
 
 class Post(models.Model):
@@ -39,13 +37,12 @@ class Post(models.Model):
     def total_dislikes(self):
         return self.dislikes.count()
 
-    def generate_unique_slug(self):
-        """Gera um slug único, adicionando números aleatórios se necessário."""
+    def generate_unique_slug(self):        
         base_slug = slugify(self.title)
         unique_slug = base_slug
 
         while Post.objects.filter(slug=unique_slug).exists():
-            random_number = ''.join(random.choices(string.digits, k=4))  # Gera um número aleatório de 4 dígitos
+            random_number = ''.join(random.choices(string.digits, k=4))
             unique_slug = f"{base_slug}-{random_number}"
 
         return unique_slug
@@ -57,7 +54,7 @@ class Post(models.Model):
         if not self.slug:
             self.slug = self.generate_unique_slug()
 
-        self.content = self.content.replace("\r\n", "\n")  # Força quebra de linha
+        self.content = self.content.replace("\r\n", "\n")
 
         super().save(*args, **kwargs)
 

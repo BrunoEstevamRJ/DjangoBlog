@@ -14,7 +14,6 @@ class Profile(models.Model):
         return self.user.username
 
 
-# Signals precisam estar FORA da classe Profile!
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
