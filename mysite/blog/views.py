@@ -9,6 +9,8 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from django.views.generic import DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
@@ -195,3 +197,15 @@ def delete_comment(request, comment_id):
     
     return JsonResponse({'success': False, 'error': 'Você não tem permissão para apagar este comentário.'})
 
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    template_name = "blog/post_confirm_delete.html"
+    success_url = reverse_lazy("blog:user_posts")
+
+
+    def test_func(self):
+        """Garante que apenas o autor pode deletar a postagem"""
+        post = self.get_object()
+        return self.request.user == post.author
+    

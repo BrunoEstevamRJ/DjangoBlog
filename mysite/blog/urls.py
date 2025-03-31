@@ -3,7 +3,7 @@ from . import views
 from django.urls import path
 from accounts import views as accounts_views
 
-from .views import SignUpView, PostCreateView, edit_post, post_single, add_comment, delete_comment
+from .views import SignUpView, PostCreateView, edit_post, post_single, add_comment, delete_comment, PostDeleteView
 from django.contrib.auth.views import LogoutView, LoginView
 from django.urls import reverse_lazy
 from accounts.views import profile
@@ -38,4 +38,5 @@ urlpatterns = [
     path('comentario/<int:comment_id>/apagar/', delete_comment, name='delete_comment'),
     path('<slug:post_slug>/like/', views.like_post, name='like_post'),
     path('<slug:post_slug>/dislike/', views.dislike_post, name='dislike_post'),
+    path("post/<int:pk>/delete/", PostDeleteView.as_view(), name="post_delete"),
 ]

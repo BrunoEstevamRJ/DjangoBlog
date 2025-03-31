@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">Deletar Postagem</h2>
+    <p class="text-center mb-4">Tem certeza de que deseja deletar esta postagem?</p>
+
+    <div class="d-flex justify-content-center">
+      <form method="post" class="w-50">
+        {% csrf_token %}
+        
+        <div class="d-flex justify-content-between">
+          <button type="submit" class="btn btn-danger w-48">Confirmar Exclusão</button>
+          <a href="{% url 'blog:user_posts' %}" class="btn btn-secondary w-48">Cancelar</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

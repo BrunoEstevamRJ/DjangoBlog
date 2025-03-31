@@ -22,7 +22,10 @@ Suas Postagens
                     <a href="{% url 'blog:post_single' post.slug %}" class="fw-bold text-decoration-none">
                         {{ post.title }}
                     </a>
-                    <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-sm btn-outline-primary">✏️ Editar</a>
+                    <div>
+                        <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-sm btn-outline-primary">✏️ Editar</a>
+                        <a href="{% url 'blog:post_delete' post.pk %}" class="btn btn-sm btn-outline-danger">🗑️ Deletar</a>
+                    </div>
                 </li>
                 {% empty %}
                 <li class="list-group-item">Você ainda não publicou nenhum post.</li>
@@ -36,6 +39,7 @@ Suas Postagens
                     <a href="{% url 'blog:edit_post' post.slug %}" class="fw-bold text-decoration-none">
                         {{ post.title }} (rascunho)
                     </a>
+                    <a href="{% url 'blog:post_delete' post.pk %}" class="btn btn-sm btn-outline-danger">🗑️ Deletar</a>
                 </li>
                 {% empty %}
                 <li class="list-group-item">Você não tem rascunhos.</li>
