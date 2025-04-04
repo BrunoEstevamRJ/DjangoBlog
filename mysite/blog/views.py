@@ -186,7 +186,7 @@ def add_comment(request, post_slug):
     return redirect('blog:post_single', post_slug=post.slug)
 
 
-# Comment Delete
+""" Deletar Comenntarios """
 @login_required
 def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
@@ -198,6 +198,7 @@ def delete_comment(request, comment_id):
     return JsonResponse({'success': False, 'error': 'Você não tem permissão para apagar este comentário.'})
 
 
+""" Deletar postagem """
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name = "blog/post_confirm_delete.html"
@@ -209,3 +210,12 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         post = self.get_object()
         return self.request.user == post.author
     
+
+"""
+class DeleteCommnet(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    temmplate_name = '/'
+    success_url = reverse_lazy('blog:user_posts')
+
+    def
+"""
