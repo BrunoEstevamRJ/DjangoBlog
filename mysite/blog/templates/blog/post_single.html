@@ -50,6 +50,21 @@
 
             <!-- Seção de Comentários -->
             <h2>Comentários</h2>
+            <div class="comments">
+                {% for comment in post.comments.all %}
+                    {% if comment.parent is None %}
+                        <div class="comment">
+                            <p><strong>{{ comment.author }}</strong>: {{ comment.content }}</p>
+                            <a href="{% url 'blog:reply_comment' post.slug comment.id %}">Responder</a>
+                            {% for reply in comment.replies.all %}
+                                <div class="reply">
+                                    <p><strong>{{ reply.author }}</strong>: {{ reply.content }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
             {% for comment in comments %}
             <div class="card my-3" id="comment-{{ comment.id }}">
                 <div class="card-body">

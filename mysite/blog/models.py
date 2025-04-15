@@ -45,9 +45,7 @@ class Post(models.Model):
             random_number = ''.join(random.choices(string.digits, k=4))
             unique_slug = f"{base_slug}-{random_number}"
 
-        return unique_slug
-
-  
+        return unique_slug  
 
 
     def save(self, *args, **kwargs):
@@ -57,6 +55,7 @@ class Post(models.Model):
         self.content = self.content.replace("\r\n", "\n")
 
         super().save(*args, **kwargs)
+
 
 
     def get_absolute_url(self):
@@ -70,7 +69,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

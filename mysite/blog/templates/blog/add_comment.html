@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+Responder ao comentário
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Responder ao comentário</h1>
+    <p>Você está respondendo ao comentário de <strong>{{ parent_comment.author }}</strong>:</p>
+    <blockquote class="blockquote">
+        <p class="mb-0">{{ parent_comment.content }}</p>
+    </blockquote>
+    <hr>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Enviar Resposta</button>
+        <a href="{% url 'blog:post_single' post.slug %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

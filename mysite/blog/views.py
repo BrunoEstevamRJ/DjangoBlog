@@ -165,25 +165,25 @@ def dislike_post(request, post_slug):
 
 
 # Comment
-def add_comment(request, post_slug):
+def add_comment(request, post_slug, parent_id=None):
     post = get_object_or_404(Post, slug=post_slug)
+    parent_comment = None
+    if parent_id:
+        parent_comment = get_object_or_404(Comment, id=parent_id)
 
-    if request.method == "POST":
+    if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = post
             comment.author = request.user
+            comment.parent = parent_comment
             comment.save()
-            
-            return JsonResponse({
-                "author": comment.author.username,
-                "content": comment.content,
-                "created_at": comment.created_at.strftime("%d/%m/%Y %H:%M"),
-                "total_comments": post.comments.count()
-            })
-    
-    return redirect('blog:post_single', post_slug=post.slug)
+            return redirect('blog:post_single', post_slug=post_slug)
+    else:
+        form = CommentForm()
+
+    return render(request, 'blog/add_comment.html', {'form': form, 'post': post, 'parent_comment': parent_comment})
 
 
 """ Deletar Comenntarios """

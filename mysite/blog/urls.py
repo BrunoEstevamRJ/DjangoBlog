@@ -39,4 +39,5 @@ urlpatterns = [
     path('<slug:post_slug>/like/', views.like_post, name='like_post'),
     path('<slug:post_slug>/dislike/', views.dislike_post, name='dislike_post'),
     path("post/<int:pk>/delete/", PostDeleteView.as_view(), name="post_delete"),
+    path('<slug:post_slug>/comment/<int:parent_id>/', views.add_comment, name='reply_comment'),
 ]
