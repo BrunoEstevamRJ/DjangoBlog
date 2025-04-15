@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
 {{ post.title }}
@@ -6,15 +7,13 @@
 
 {% block content %}
 <div class="container">
-
-    <!-- Botão de Voltar abaixo -->
+    <!-- Botão de Voltar -->
     <br>
     <div class="d-flex justify-content-start mb-3">
         <a href="{% url 'blog:homepage' %}" class="btn btn-outline-secondary">↩️ Voltar</a>
     </div>
 
     <div class="row justify-content-md-center pt-5">
-
         <div class="col-md-8">
 
             <h1 class="mb-3">{{ post.title }}</h1>
@@ -39,12 +38,24 @@
                 {% if user == post.author %}
                 <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-outline-primary w-25">✏️ Editar</a>
                 {% endif %}
-
-                </form>
-
-
-
             </div>
+
+            <hr>
+
+            <!-- Formulário de Comentário Principal -->
+            <h3>Deixe um comentário</h3>
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'blog:add_comment' post.slug %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_content" class="form-label">Seu comentário:</label>
+                    <textarea name="content" id="id_content" class="form-control" rows="3" required style="resize: none;"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+            {% else %}
+            <p><a href="{% url 'blog:login' %}">Faça login</a> para comentar.</p>
+            {% endif %}
 
             <hr>
 
@@ -53,52 +64,89 @@
             <div class="comments">
                 {% for comment in post.comments.all %}
                     {% if comment.parent is None %}
-                        <div class="comment">
-                            <p><strong>{{ comment.author }}</strong>: {{ comment.content }}</p>
-                            <a href="{% url 'blog:reply_comment' post.slug comment.id %}">Responder</a>
-                            {% for reply in comment.replies.all %}
-                                <div class="reply">
-                                    <p><strong>{{ reply.author }}</strong>: {{ reply.content }}</p>
-                                </div>
-                            {% endfor %}
+                        <div class="comment" id="comment-{{ comment.id }}">
+                            <div class="comment-content">
+                                <p><strong>{{ comment.author }}</strong>: {{ comment.content }}</p>
+                                <small>{{ comment.created_at }}</small>
+                                <a href="#" class="reply-link btn btn-sm btn-link" data-comment-id="{{ comment.id }}">Responder</a>
+                                {% if user == comment.author %}
+                                    <button class="btn btn-sm btn-danger delete-comment" data-id="{{ comment.id }}" 
+                                            data-url="{% url 'blog:delete_comment' comment.id %}">
+                                        🗑️ Apagar
+                                    </button>
+                                {% endif %}
+                            </div>
+
+                            <!-- Formulário de Resposta -->
+                            <div class="reply-form" id="reply-form-{{ comment.id }}" style="display: none; margin-left: 40px;">
+                                <form method="post" action="{% url 'blog:reply_comment' post.slug comment.id %}">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <textarea name="content" class="form-control" rows="2" placeholder="Escreva sua resposta..." required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
+                                    <button type="button" class="btn btn-secondary btn-sm cancel-reply" data-comment-id="{{ comment.id }}">Cancelar</button>
+                                </form>
+                            </div>
+
+                            <!-- Respostas -->
+                            <div class="replies" style="margin-left: 40px; border-left: 2px solid #dee2e6; padding-left: 20px;">
+                                {% for reply in comment.replies.all %}
+                                    <div class="reply" id="comment-{{ reply.id }}">
+                                        <div class="reply-content">
+                                            <p><strong>{{ reply.author }}</strong>: {{ reply.content }}</p>
+                                            <small>{{ reply.created_at }}</small>
+                                            <a href="#" class="reply-link btn btn-sm btn-link" data-comment-id="{{ reply.id }}">Responder</a>
+                                            {% if user == reply.author %}
+                                                <button class="btn btn-sm btn-danger delete-comment" data-id="{{ reply.id }}" 
+                                                        data-url="{% url 'blog:delete_comment' reply.id %}">
+                                                    🗑️ Apagar
+                                                </button>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Formulário de Resposta Aninhada -->
+                                        <div class="reply-form" id="reply-form-{{ reply.id }}" style="display: none; margin-left: 20px;">
+                                            <form method="post" action="{% url 'blog:reply_comment' post.slug reply.id %}">
+                                                {% csrf_token %}
+                                                <div class="mb-3">
+                                                    <textarea name="content" class="form-control" rows="2" placeholder="Escreva sua resposta..." required></textarea>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
+                                                <button type="button" class="btn btn-secondary btn-sm cancel-reply" data-comment-id="{{ reply.id }}">Cancelar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
                     {% endif %}
+                {% empty %}
+                    <p>Sem comentários ainda. Seja o primeiro a comentar!</p>
                 {% endfor %}
             </div>
-            {% for comment in comments %}
-            <div class="card my-3" id="comment-{{ comment.id }}">
-                <div class="card-body">
-                    <p><strong>{{ comment.author }}</strong> disse em {{ comment.created_at }}:</p>
-                    <p>{{ comment.content|linebreaks }}</p>
-                    {% if user == comment.author %}
-                    <button class="btn btn-sm btn-danger delete-comment" data-id="{{ comment.id }}"
-                        data-url="{% url 'blog:delete_comment' comment.id %}">
-                        🗑️ Apagar
-                    </button>
-                    {% endif %}
-                </div>
-            </div>
-            {% empty %}
-            <p>Sem comentários ainda. Seja o primeiro a comentar!</p>
-            {% endfor %}
 
-            <hr>
-
-            <!-- Formulário de Comentário -->
-            <h3>Deixe um comentário</h3>
-            {% if user.is_authenticated %}
-            <form method="post">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="id_content" class="form-label">Seu comentário:</label>
-                    <textarea name="content" id="id_content" class="form-control" rows="3" required
-                        style="resize: none;"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Enviar</button>
-            </form>
-            {% else %}
-            <p><a href="{% url 'blog:login' %}">Faça login</a> para comentar.</p>
-            {% endif %}
+            <style>
+                .comment {
+                    margin-bottom: 20px;
+                }
+                .comment-content, .reply-content {
+                    background-color: #f8f9fa;
+                    padding: 10px;
+                    border-radius: 5px;
+                    margin-bottom: 10px;
+                }
+                .replies {
+                    margin-top: 10px;
+                }
+                .reply {
+                    margin-bottom: 15px;
+                }
+                .reply-link {
+                    font-size: 0.9em;
+                    margin-left: 10px;
+                }
+            </style>
         </div>
     </div>
 </div>
@@ -106,6 +154,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
+        // Função para deletar comentários
         $(".delete-comment").on("click", function () {
             var button = $(this);
             var commentId = button.data("id");
@@ -136,6 +185,7 @@
                 }
             });
         });
+
         // Função para o botão de like
         $('.like-btn').on('click', function (e) {
             e.preventDefault();
@@ -185,6 +235,24 @@
         });
     });
 
+    document.addEventListener('DOMContentLoaded', function () {
+        // Mostrar formulário de resposta
+        document.querySelectorAll('.reply-link').forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const commentId = this.getAttribute('data-comment-id');
+                document.getElementById(`reply-form-${commentId}`).style.display = 'block';
+            });
+        });
+
+        // Cancelar resposta
+        document.querySelectorAll('.cancel-reply').forEach(function (button) {
+            button.addEventListener('click', function () {
+                const commentId = this.getAttribute('data-comment-id');
+                document.getElementById(`reply-form-${commentId}`).style.display = 'none';
+            });
+        });
+    });
 </script>
 
 {% endblock %}

@@ -18,12 +18,13 @@ class Post(models.Model):
         ('published', 'Published'),
     )
 
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=200)
     excerpt = models.TextField(null=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     publish = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
     content = models.TextField()
+    #created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=options, default='draft')
     objects = models.Manager()
     newmanager = NewManager()

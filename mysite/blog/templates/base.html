@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    {% load static %}
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -9,6 +10,9 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'blog/styles.css' %}">
 
     <title>
         {% block title %}
@@ -33,18 +37,11 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">            
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
-
-
                 <li class="nav-item">
                     <span class="navbar-text text-white mr-3">
                         Bem-vindo, <a href="{% url 'accounts:profile' user.username %}">{{ user.username }}</a>
-
-
                     </span>
                 </li>
-
-
-                
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'blog:logout' %}"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -54,7 +51,6 @@
                         {% csrf_token %}
                     </form>
                 </li>
-
                 {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'blog:login' %}">Login</a>

@@ -1,0 +1,24 @@
+<div class="replies" style="margin-left: 20px;">
+    {% for reply in replies %}
+        <div class="reply">
+            <p><strong>{{ reply.author }}</strong>: {{ reply.content }}</p>
+            <small>{{ reply.created_at }}</small>
+            <a href="#" class="reply-link" data-comment-id="{{ reply.id }}">Responder</a>
+
+            <!-- Formulário de Resposta -->
+            <div class="reply-form" id="reply-form-{{ reply.id }}" style="display: none; margin-left: 20px;">
+                <form method="post" action="{% url 'blog:reply_comment' post.slug reply.id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <textarea name="content" class="form-control" rows="2" placeholder="Escreva sua resposta..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
+                    <button type="button" class="btn btn-secondary btn-sm cancel-reply" data-comment-id="{{ reply.id }}">Cancelar</button>
+                </form>
+            </div>
+
+            <!-- Exibir Respostas Recursivamente -->
+            {% include "blog/comment_replies.html" with replies=reply.replies.all %}
+        </div>
+    {% endfor %}
+</div>

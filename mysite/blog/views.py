@@ -27,26 +27,8 @@ def home(request):
 # Página de detalhes de um post
 def post_single(request, post_slug):
     post = get_object_or_404(Post, slug=post_slug)
-    comments = Comment.objects.filter(post=post).order_by('-created_at')
-
-    if request.method == 'POST':
-        comment_form = CommentForm(request.POST)
-        if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
-            comment.post = post
-            comment.author = request.user
-            comment.save()
-            messages.success(request, "Comentário adicionado com sucesso!")
-            return redirect('blog:post_single', post_slug=post.slug)
-    else:
-        comment_form = CommentForm()
-
-    return render(request, 'blog/post_single.html', {
-        'post': post,
-        'comments': comments,
-        'comment_form': comment_form
-    })
-
+    comments = post.comments.filter(parent__isnull=True).prefetch_related('replies')
+    return render(request, 'blog/post_single.html', {'post': post, 'comments': comments})
 
 
 # View de cadastro de usuário (signup)
@@ -86,7 +68,7 @@ def edit_post(request, post_slug):
 @login_required
 def user_posts(request):
     posts_published = Post.objects.filter(author=request.user, status='published')
-    posts_drafts = Post.objects.filter(author=request.user, status='draft')  # Se houver rascunhos
+    posts_drafts = Post.objects.filter(author=request.user, status='draft')
 
     return render(request, 'blog/user_posts.html', {
         'posts_published': posts_published,
@@ -168,6 +150,7 @@ def dislike_post(request, post_slug):
 def add_comment(request, post_slug, parent_id=None):
     post = get_object_or_404(Post, slug=post_slug)
     parent_comment = None
+
     if parent_id:
         parent_comment = get_object_or_404(Comment, id=parent_id)
 
@@ -180,10 +163,8 @@ def add_comment(request, post_slug, parent_id=None):
             comment.parent = parent_comment
             comment.save()
             return redirect('blog:post_single', post_slug=post_slug)
-    else:
-        form = CommentForm()
 
-    return render(request, 'blog/add_comment.html', {'form': form, 'post': post, 'parent_comment': parent_comment})
+    return redirect('blog:post_single', post_slug=post_slug)
 
 
 """ Deletar Comenntarios """
