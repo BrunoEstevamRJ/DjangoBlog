@@ -140,7 +140,7 @@
         $('.like-btn').on('click', function (e) {
             e.preventDefault();
             var slug = $(this).data('slug');
-            var url = "{% url 'blog:like_post' 'placeholder' %}".replace('placeholder', slug); // Usa o nome da URL do Django
+            var url = "{% url 'blog:like_post' 'placeholder' %}".replace('placeholder', slug); 
             var csrfToken = '{{ csrf_token }}';
 
             $.ajax({
@@ -152,7 +152,7 @@
                 success: function (response) {
                     $('.like-count').text(response.total_likes);
                     $('.dislike-count').text(response.total_dislikes);
-                    console.log(response); // Adicionado console.log
+                    console.log(response);
                 },
                 error: function (error) {
                     console.log(error);
@@ -164,7 +164,7 @@
         $('.dislike-btn').on('click', function (e) {
             e.preventDefault();
             var slug = $(this).data('slug');
-            var url = "{% url 'blog:dislike_post' 'placeholder' %}".replace('placeholder', slug); // Usa o nome da URL do Django
+            var url = "{% url 'blog:dislike_post' 'placeholder' %}".replace('placeholder', slug);
             var csrfToken = '{{ csrf_token }}';
 
             $.ajax({
@@ -176,7 +176,7 @@
                 success: function (response) {
                     $('.like-count').text(response.total_likes);
                     $('.dislike-count').text(response.total_dislikes);
-                    console.log(response); // Adicionado console.log
+                    console.log(response);
                 },
                 error: function (error) {
                     console.log(error);
