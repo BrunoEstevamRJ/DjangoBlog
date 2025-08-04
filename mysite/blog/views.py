@@ -193,10 +193,13 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     
 
 """
-class DeleteCommnet(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class DeleteComment(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Comment
-    temmplate_name = '/'
+    temmplate_name = 'blog/comment_confirm_delete.html'
     success_url = reverse_lazy('blog:user_posts')
 
-    def
+    def test_func(self):
+        comment = self.get_object()
+        comment = self.get_object()
+        return self.request.user == comment.author
 """

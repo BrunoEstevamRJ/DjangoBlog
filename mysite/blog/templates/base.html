@@ -61,17 +61,27 @@
     </nav>
 
     {% block content %}
+
     {% endblock %}
 
     <!-- AJAX Setup -->
     <script>
-        var csrfToken = document.getElementById('csrf-token').value;
+	    
+  function openModal(postId) {
+    document.getElementById(`delete-modal-${postId}`).classList.remove('hidden');
+  }
+
+  function closeModal(postId) {
+    document.getElementById(`delete-modal-${postId}`).classList.add('hidden');
+  }
+    </script>
+        var csrfToken = documentgetElementById('csrf-token').value;
         $.ajaxSetup({
             headers: {
                 'X-CSRFToken': csrfToken
             }
         });
-    </script>
+	</script>
 
     <!-- Optional JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
