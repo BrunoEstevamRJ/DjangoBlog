@@ -82,12 +82,17 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
     template_name = 'blog/create_post.html'
-    success_url = reverse_lazy('blog:homepage')
+    success_url = reverse_lazy('blog:post_single')
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+    def get_success_url(self):
+        next_url = self.request.GET.get('next')
+        if next_url:
+            return next_url
+        return reverse_lazy("blog:homepage")
 
 # Editar postagem
 @login_required

@@ -30,7 +30,7 @@ Criar Nova Postagem
 
                     <!-- Botões de Ação -->
                     <div class="d-flex justify-content-between">
-                        <a href="{% url 'blog:homepage' %}" class="btn btn-danger">Cancelar</a>
+		        <a href="{{ request.GET.next|default:'/' }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-success">Publicar</button>
                     </div>
                 </form>

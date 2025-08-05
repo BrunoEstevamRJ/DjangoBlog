@@ -7,8 +7,13 @@ Suas Postagens
 {% block content %}
 <div class="container">
     <br>
-    <div class="d-flex justify-content-start mb-3">
+    <div class="d-flex justify-content-between mb-3">
         <a href="{% url 'blog:homepage' %}" class="btn btn-outline-secondary">↩️ Voltar</a>
+        <a href="{% url 'blog:create_post' %}" class="btn btn-primary ms-2">➕ Nova Postagem</a>
+       </div>
+   
+    <div class="mb-4 text-end">
+
     </div>
 
     <div class="row justify-content-md-center pt-5">
@@ -24,7 +29,7 @@ Suas Postagens
                     </a>
                     <div>
                         <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-sm btn-outline-primary">✏️ Editar</a>
-                        <a href="{% url 'blog:post_delete' post.pk %}" class="btn btn-sm btn-outline-danger">🗑️ Deletar</a>
+			<a href="{% url 'blog:post_delete' post.pk %}?next={% url 'blog:user_posts' %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Tem certeza que deseja deletar esta postagem?');">🗑️ Deletar</a>
                     </div>
                 </li>
                 {% empty %}
