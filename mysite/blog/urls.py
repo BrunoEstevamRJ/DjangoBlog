@@ -3,7 +3,7 @@ from . import views
 from django.urls import path
 from accounts import views as accounts_views
 
-from .views import SignUpView, PostCreateView, edit_post, post_single, add_comment, delete_comment, PostDeleteView
+from .views import SignUpView, PostCreateView, edit_post, post_single, add_comment, delete_comment, PostDeleteView, MyPostCreateView
 from django.contrib.auth.views import LogoutView, LoginView
 from django.urls import reverse_lazy
 from accounts.views import profile
@@ -15,6 +15,7 @@ urlpatterns = [
     # Base
     path('', views.home, name='homepage'),
     path('create/', PostCreateView.as_view(), name='create_post'),
+    path('my-posts/create/', MyPostCreateView.as_view(), name='my_create_post'),
 
     # signup | login | logout  
     path('accounts/signup/', SignUpView.as_view(), name='signup'),

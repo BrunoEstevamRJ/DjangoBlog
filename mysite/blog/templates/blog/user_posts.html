@@ -9,7 +9,10 @@ Suas Postagens
     <br>
     <div class="d-flex justify-content-between mb-3">
         <a href="{% url 'blog:homepage' %}" class="btn btn-outline-secondary">↩️ Voltar</a>
-        <a href="{% url 'blog:create_post' %}" class="btn btn-primary ms-2">➕ Nova Postagem</a>
+        <a href="{% url 'blog:my_create_post' %}?next={% url 'blog:user_posts' %}" class="btn btn-success">
+    Nova Postagem
+</a>
+
        </div>
    
     <div class="mb-4 text-end">

@@ -10,8 +10,7 @@ Criar Nova Postagem
         <div class="col-md-8">
             <div class="card p-4 shadow-sm">
                 <h2 class="mb-4 text-center">Criar Nova Postagem</h2>
-
-                <form method="post" enctype="multipart/form-data">
+		  <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
 
                     <!-- Renderiza cada campo individualmente -->
@@ -28,9 +27,9 @@ Criar Nova Postagem
                         </div>
                     {% endfor %}
 
-                    <!-- Botões de Ação -->
+		   <!-- Botões de Ação -->
                     <div class="d-flex justify-content-between">
-		        <a href="{{ request.GET.next|default:'/' }}" class="btn btn-danger">Cancelar</a>
+		                    <a href="{{ cancel_url }}" class="btn btn-danger">Cancelar</a>
                         <button type="submit" class="btn btn-success">Publicar</button>
                     </div>
                 </form>
