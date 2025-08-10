@@ -8,7 +8,8 @@ Suas Postagens
 <div class="container">
     <br>
     <div class="d-flex justify-content-between mb-3">
-        <a href="{% url 'blog:homepage' %}" class="btn btn-outline-secondary">↩️ Voltar</a>
+	    <!-- <a href="{% url 'blog:homepage' %}" class="btn btn-outline-secondary">↩️ Voltar</a> -->
+	    <a href="{% url 'blog:profile' request.user.username %}" class="btn btn-outline-secondary">↩️ Voltar</a> <!--  aparentemente o profile esta no blog ao inves de account  -->
         <a href="{% url 'blog:my_create_post' %}?next={% url 'blog:user_posts' %}" class="btn btn-success">
     Nova Postagem
 </a>
