@@ -217,7 +217,13 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         """Garante que apenas o autor pode deletar a postagem"""
         post = self.get_object()
         return self.request.user == post.author
-    
+ 
+
+def health(request):
+    return JsonResponse({
+        "status": "ok",
+        "app": "DjangoBlog"
+    })
 
 """
 class DeleteComment(LoginRequiredMixin, UserPassesTestMixin, DeleteView):

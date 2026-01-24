@@ -20,6 +20,7 @@ class StatementSplitter:
         self._in_case = False
         self._is_create = False
         self._begin_depth = 0
+        self._seen_begin = False
 
         self.consume_ws = False
         self.tokens = []
@@ -54,9 +55,21 @@ class StatementSplitter:
 
         if unified == 'BEGIN':
             self._begin_depth += 1
+            self._seen_begin = True
             if self._is_create:
                 # FIXME(andi): This makes no sense.  ## this comment neither
                 return 1
+            return 0
+
+        # Issue826: If we see a transaction keyword after BEGIN,
+        # it's a transaction statement, not a block.
+        if self._seen_begin and \
+                (ttype is T.Keyword or ttype is T.Name) and \
+                unified in ('TRANSACTION', 'WORK', 'TRAN',
+                            'DISTRIBUTED', 'DEFERRED',
+                            'IMMEDIATE', 'EXCLUSIVE'):
+            self._begin_depth = max(0, self._begin_depth - 1)
+            self._seen_begin = False
             return 0
 
         # BEGIN and CASE/WHEN both end with END
@@ -106,9 +119,25 @@ class StatementSplitter:
             # When implementing a language toggle, it's not only to add
             # keywords it's also to change some rules, like this splitting
             # rule.
-            if (self.level <= 0 and ttype is T.Punctuation and value == ';') \
-                    or (ttype is T.Keyword and value.split()[0] == 'GO'):
+            # Issue809: Ignore semicolons inside BEGIN...END blocks, but handle
+            # standalone BEGIN; as a transaction statement
+            if ttype is T.Punctuation and value == ';':
+                # If we just saw BEGIN; then this is a transaction BEGIN,
+                # not a BEGIN...END block, so decrement depth
+                if self._seen_begin:
+                    self._begin_depth = max(0, self._begin_depth - 1)
+                self._seen_begin = False
+                # Split on semicolon if not inside a BEGIN...END block
+                if self.level <= 0 and self._begin_depth == 0:
+                    self.consume_ws = True
+            elif ttype is T.Keyword and value.split()[0] == 'GO':
                 self.consume_ws = True
+            elif (ttype not in (T.Whitespace, T.Newline, T.Comment.Single,
+                                T.Comment.Multiline)
+                  and not (ttype is T.Keyword and value.upper() == 'BEGIN')):
+                # Reset _seen_begin if we see a non-whitespace, non-comment
+                # token but not for BEGIN itself (which just set the flag)
+                self._seen_begin = False
 
         # Yield pending statement (if any)
         if self.tokens and not all(t.is_whitespace for t in self.tokens):

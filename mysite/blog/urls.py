@@ -7,10 +7,16 @@ from .views import SignUpView, PostCreateView, edit_post, post_single, add_comme
 from django.contrib.auth.views import LogoutView, LoginView
 from django.urls import reverse_lazy
 from accounts.views import profile
+from .views import health
+
 
 app_name = 'blog'
 
 urlpatterns = [
+
+        
+    path("health/", views.health, name="health"),
+
 
     # Base
     path('', views.home, name='homepage'),
@@ -41,4 +47,7 @@ urlpatterns = [
     path('<slug:post_slug>/dislike/', views.dislike_post, name='dislike_post'),
     path("post/<int:pk>/delete/", PostDeleteView.as_view(), name="post_delete"),
     path('<slug:post_slug>/comment/<int:parent_id>/', views.add_comment, name='reply_comment'),
+    
+
+
 ]

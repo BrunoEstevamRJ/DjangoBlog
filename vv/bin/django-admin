@@ -1,4 +1,4 @@
-#!/home/hellhound/Projects/DjangoBlog/vv/bin/python3.11
+#!/home/hellhound/Projects/DjangoBlog/vv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

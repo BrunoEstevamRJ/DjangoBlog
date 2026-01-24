@@ -35,11 +35,11 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV=/home/hellhound/Projects/DjangoBlog/vv
+VIRTUAL_ENV="/home/hellhound/Projects/DjangoBlog/vv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
-PATH="$VIRTUAL_ENV/"bin":$PATH"
+PATH="$VIRTUAL_ENV/bin:$PATH"
 export PATH
 
 # unset PYTHONHOME if set
@@ -52,9 +52,9 @@ fi
 
 if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ] ; then
     _OLD_VIRTUAL_PS1="${PS1:-}"
-    PS1='(vv) '"${PS1:-}"
+    PS1="(vv) ${PS1:-}"
     export PS1
-    VIRTUAL_ENV_PROMPT='(vv) '
+    VIRTUAL_ENV_PROMPT="(vv) "
     export VIRTUAL_ENV_PROMPT
 fi
 
