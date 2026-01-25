@@ -6,14 +6,17 @@ from .forms import ProfileForm
 
 
 
-# profile page
-@login_required
+'''==[ Profile Page ]=='''
 def profile(request, username):
     profile_user = get_object_or_404(User, username=username)
-    posts = Post.objects.filter(author=profile_user, status="published")
-    return render(request, "accounts/profile.html", {"profile_user": profile_user, "posts": posts})
+    posts = Post.objects.filter(author=profile_user).order_by('-publish')
 
-# Edit Profile  page
+    return render(request, "accounts/profile.html", {
+        "profile_user": profile_user,
+        "posts": posts,
+    })
+
+'''==[ Editar Perfil ]=='''
 @login_required
 def edit_profile(request):
     profile = request.user.profile

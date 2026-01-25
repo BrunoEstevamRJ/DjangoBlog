@@ -1,42 +1,59 @@
 {% extends "base.html" %}
 
-{% block title %}Perfil de {{ user.username }}{% endblock %}
+{% block title %}Perfil de {{ profile_user.username }}{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="card p-4">
         <div class="row">
             <div class="col-md-3 text-center">
-                {% if user.profile.profile_picture %}
-    <img src="{{ user.profile.profile_picture.url }}" class="img-fluid rounded-circle" alt="Foto de perfil">
-    {% else %}
-        <img src="https://via.placeholder.com/150" class="img-fluid rounded-circle" alt="Sem foto">
-    {% endif %}
-
+                {% if profile_user.profile.profile_picture %}
+                    <img src="{{ profile_user.profile.profile_picture.url }}"
+                         class="img-fluid rounded-circle"
+                         alt="Foto de perfil">
+                {% else %}
+                    <img src="https://via.placeholder.com/150"
+                         class="img-fluid rounded-circle"
+                         alt="Sem foto">
+                {% endif %}
             </div>
+
             <div class="col-md-9">
-                <h2>{{ user.username }}</h2>
-                {% if user.profile.bio %}
-                    <p><strong>Bio:</strong> {{ user.profile.bio }}</p>
+                <h2>{{ profile_user.username }}</h2>
+
+                {% if profile_user.profile.bio %}
+                    <p><strong>Bio:</strong> {{ profile_user.profile.bio }}</p>
                 {% endif %}
-                {% if user.profile.age %}
-                    <p><strong>Idade:</strong> {{ user.profile.age }}</p>
+
+                {% if profile_user.profile.age %}
+                    <p><strong>Idade:</strong> {{ profile_user.profile.age }}</p>
                 {% endif %}
-            
-                {% if user == request.user %}
-                    <a href="{% url 'blog:user_posts' %}" class="btn btn-outline-primary mt-2">📄 Minhas Postagens</a>
-                    <a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-warning mt-2">✏️ Editar Perfil</a>
+
+                {% if profile_user == request.user %}
+                    <a href="{% url 'blog:user_posts' %}"
+                       class="btn btn-outline-primary mt-2">
+                        📄 Minhas Postagens
+                    </a>
+
+                    <a href="{% url 'accounts:edit_profile' %}"
+                       class="btn btn-outline-warning mt-2">
+                        ✏️ Editar Perfil
+                    </a>
                 {% endif %}
             </div>
         </div>
     </div>
 
-    <h3 class="mt-4">Postagens de {{ user.username }}</h3>
+    <h3 class="mt-4">Postagens de {{ profile_user.username }}</h3>
+
     {% if posts %}
         <ul class="list-group">
             {% for post in posts %}
                 <li class="list-group-item">
-                    <a href="{{ post.get_absolute_url }}">{{ post.title }}</a> - {{ post.publish|date:"d/m/Y" }}
+                    <a href="{{ post.get_absolute_url }}">
+                        {{ post.title }}
+                    </a>
+                    - {{ post.publish|date:"d/m/Y" }}
                 </li>
             {% endfor %}
         </ul>
