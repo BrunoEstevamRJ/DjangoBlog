@@ -7,8 +7,9 @@
 
 {% block content %}
 <div class="container">
-    <!-- Botão de Voltar -->
     <br>
+
+    <!-- Botão de Voltar -->
     <div class="d-flex justify-content-start mb-3">
         <a href="{% url 'blog:homepage' %}" class="btn btn-outline-secondary">↩️ Voltar</a>
     </div>
@@ -16,7 +17,15 @@
     <div class="row justify-content-md-center pt-5">
         <div class="col-md-8">
 
-            <h1 class="mb-3">{{ post.title }}</h1>
+            <h1 class="mb-2">{{ post.title }}</h1>
+
+            <!-- Autor do post -->
+            <p class="text-muted">
+                Publicado por
+                <a href="{% url 'accounts:profile' post.author.username %}">
+                    {{ post.author.username }}
+                </a>
+            </p>
 
             <div class="col-12">
                 <p>{{ post.content|safe }}</p>
@@ -26,6 +35,7 @@
                 {% endif %}
             </div>
 
+            <!-- Likes -->
             <div class="d-flex flex-wrap gap-2 justify-content-center mt-4">
                 <button class="btn btn-success like-btn w-25" data-slug="{{ post.slug }}">
                     👍 Like (<span class="like-count">{{ post.total_likes }}</span>)
@@ -36,14 +46,17 @@
                 </button>
 
                 {% if user == post.author %}
-                <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-outline-primary w-25">✏️ Editar</a>
+                <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-outline-primary w-25">
+                    ✏️ Editar
+                </a>
                 {% endif %}
             </div>
 
             <hr>
 
-            <!-- Formulário de Comentário Principal -->
+            <!-- Comentário principal -->
             <h3>Deixe um comentário</h3>
+
             {% if user.is_authenticated %}
             <form method="post" action="{% url 'blog:add_comment' post.slug %}">
                 {% csrf_token %}
@@ -59,67 +72,111 @@
 
             <hr>
 
-            <!-- Seção de Comentários -->
+            <!-- Comentários -->
             <h2>Comentários</h2>
+
             <div class="comments">
                 {% for comment in post.comments.all %}
                     {% if comment.parent is None %}
-                        <div class="comment" id="comment-{{ comment.id }}">
-                            <div class="comment-content">
-                                <p><strong>{{ comment.author }}</strong>: {{ comment.content }}</p>
-                                <small>{{ comment.created_at }}</small>
-                                <a href="#" class="reply-link btn btn-sm btn-link" data-comment-id="{{ comment.id }}">Responder</a>
+                    <div class="comment" id="comment-{{ comment.id }}">
+
+                        <div class="comment-content">
+                            <p>
+                                <strong>
+                                    <a href="{% url 'accounts:profile' comment.author.username %}">
+                                        {{ comment.author.username }}
+                                    </a>
+                                </strong>
+                                : {{ comment.content }}
+                            </p>
+
+                            <small>{{ comment.created_at }}</small>
+
+                            <div class="mt-1">
+                                <a href="#" class="reply-link btn btn-sm btn-link" data-comment-id="{{ comment.id }}">
+                                    Responder
+                                </a>
+
                                 {% if user == comment.author %}
-                                    <button class="btn btn-sm btn-danger delete-comment" data-id="{{ comment.id }}" 
-                                            data-url="{% url 'blog:delete_comment' comment.id %}">
-                                        🗑️ Apagar
-                                    </button>
+                                <button class="btn btn-sm btn-danger delete-comment"
+                                        data-id="{{ comment.id }}"
+                                        data-url="{% url 'blog:delete_comment' comment.id %}">
+                                    🗑️ Apagar
+                                </button>
                                 {% endif %}
                             </div>
-
-                            <!-- Formulário de Resposta -->
-                            <div class="reply-form" id="reply-form-{{ comment.id }}" style="display: none; margin-left: 40px;">
-                                <form method="post" action="{% url 'blog:reply_comment' post.slug comment.id %}">
-                                    {% csrf_token %}
-                                    <div class="mb-3">
-                                        <textarea name="content" class="form-control" rows="2" placeholder="Escreva sua resposta..." required></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
-                                    <button type="button" class="btn btn-secondary btn-sm cancel-reply" data-comment-id="{{ comment.id }}">Cancelar</button>
-                                </form>
-                            </div>
-
-                            <!-- Respostas -->
-                            <div class="replies" style="margin-left: 40px; border-left: 2px solid #dee2e6; padding-left: 20px;">
-                                {% for reply in comment.replies.all %}
-                                    <div class="reply" id="comment-{{ reply.id }}">
-                                        <div class="reply-content">
-                                            <p><strong>{{ reply.author }}</strong>: {{ reply.content }}</p>
-                                            <small>{{ reply.created_at }}</small>
-                                            <a href="#" class="reply-link btn btn-sm btn-link" data-comment-id="{{ reply.id }}">Responder</a>
-                                            {% if user == reply.author %}
-                                                <button class="btn btn-sm btn-danger delete-comment" data-id="{{ reply.id }}" 
-                                                        data-url="{% url 'blog:delete_comment' reply.id %}">
-                                                    🗑️ Apagar
-                                                </button>
-                                            {% endif %}
-                                        </div>
-
-                                        <!-- Formulário de Resposta Aninhada -->
-                                        <div class="reply-form" id="reply-form-{{ reply.id }}" style="display: none; margin-left: 20px;">
-                                            <form method="post" action="{% url 'blog:reply_comment' post.slug reply.id %}">
-                                                {% csrf_token %}
-                                                <div class="mb-3">
-                                                    <textarea name="content" class="form-control" rows="2" placeholder="Escreva sua resposta..." required></textarea>
-                                                </div>
-                                                <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
-                                                <button type="button" class="btn btn-secondary btn-sm cancel-reply" data-comment-id="{{ reply.id }}">Cancelar</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
                         </div>
+
+                        <!-- Form resposta -->
+                        <div class="reply-form" id="reply-form-{{ comment.id }}" style="display: none; margin-left: 40px;">
+                            <form method="post" action="{% url 'blog:reply_comment' post.slug comment.id %}">
+                                {% csrf_token %}
+                                <div class="mb-2">
+                                    <textarea name="content" class="form-control" rows="2"
+                                              placeholder="Escreva sua resposta..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
+                                <button type="button" class="btn btn-secondary btn-sm cancel-reply"
+                                        data-comment-id="{{ comment.id }}">
+                                    Cancelar
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Replies -->
+                        <div class="replies" style="margin-left: 40px; border-left: 2px solid #dee2e6; padding-left: 20px;">
+                            {% for reply in comment.replies.all %}
+                            <div class="reply" id="comment-{{ reply.id }}">
+                                <div class="reply-content">
+                                    <p>
+                                        <strong>
+                                            <a href="{% url 'accounts:profile' reply.author.username %}">
+                                                {{ reply.author.username }}
+                                            </a>
+                                        </strong>
+                                        : {{ reply.content }}
+                                    </p>
+
+                                    <small>{{ reply.created_at }}</small>
+
+                                    <div class="mt-1">
+                                        <a href="#" class="reply-link btn btn-sm btn-link"
+                                           data-comment-id="{{ reply.id }}">
+                                            Responder
+                                        </a>
+
+                                        {% if user == reply.author %}
+                                        <button class="btn btn-sm btn-danger delete-comment"
+                                                data-id="{{ reply.id }}"
+                                                data-url="{% url 'blog:delete_comment' reply.id %}">
+                                            🗑️ Apagar
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Resposta aninhada -->
+                                <div class="reply-form" id="reply-form-{{ reply.id }}"
+                                     style="display: none; margin-left: 20px;">
+                                    <form method="post"
+                                          action="{% url 'blog:reply_comment' post.slug reply.id %}">
+                                        {% csrf_token %}
+                                        <div class="mb-2">
+                                            <textarea name="content" class="form-control" rows="2"
+                                                      placeholder="Escreva sua resposta..." required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
+                                        <button type="button" class="btn btn-secondary btn-sm cancel-reply"
+                                                data-comment-id="{{ reply.id }}">
+                                            Cancelar
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
                     {% endif %}
                 {% empty %}
                     <p>Sem comentários ainda. Seja o primeiro a comentar!</p>
@@ -130,129 +187,117 @@
                 .comment {
                     margin-bottom: 20px;
                 }
-                .comment-content, .reply-content {
+
+                .comment-content,
+                .reply-content {
                     background-color: #f8f9fa;
                     padding: 10px;
                     border-radius: 5px;
                     margin-bottom: 10px;
                 }
-                .replies {
-                    margin-top: 10px;
+
+                .comment-content a,
+                .reply-content a {
+                    text-decoration: none;
+                    font-weight: 600;
                 }
+
+                .comment-content a:hover,
+                .reply-content a:hover {
+                    text-decoration: underline;
+                }
+
                 .reply {
                     margin-bottom: 15px;
                 }
-                .reply-link {
-                    font-size: 0.9em;
-                    margin-left: 10px;
-                }
             </style>
+
         </div>
     </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-    $(document).ready(function () {
-        // Função para deletar comentários
-        $(".delete-comment").on("click", function () {
-            var button = $(this);
-            var commentId = button.data("id");
-            var deleteUrl = button.data("url");
-            var csrfToken = "{{ csrf_token }}";
+$(document).ready(function () {
 
-            if (!confirm("Tem certeza que deseja excluir este comentário?")) {
-                return;
+    $(".delete-comment").on("click", function () {
+        const button = $(this);
+        const commentId = button.data("id");
+        const deleteUrl = button.data("url");
+        const csrfToken = "{{ csrf_token }}";
+
+        if (!confirm("Tem certeza que deseja excluir este comentário?")) return;
+
+        $.ajax({
+            type: "POST",
+            url: deleteUrl,
+            headers: { "X-CSRFToken": csrfToken },
+            success: function (response) {
+                if (response.success) {
+                    $("#comment-" + commentId).fadeOut(300, function () {
+                        $(this).remove();
+                    });
+                }
             }
-
-            $.ajax({
-                type: "POST",
-                url: deleteUrl,
-                headers: {
-                    "X-CSRFToken": csrfToken
-                },
-                success: function (response) {
-                    if (response.success) {
-                        $("#comment-" + commentId).fadeOut(500, function () {
-                            $(this).remove();
-                        });
-                    } else {
-                        alert("Erro: " + response.error);
-                    }
-                },
-                error: function () {
-                    alert("Ocorreu um erro ao tentar apagar o comentário.");
-                }
-            });
-        });
-
-        // Função para o botão de like
-        $('.like-btn').on('click', function (e) {
-            e.preventDefault();
-            var slug = $(this).data('slug');
-            var url = "{% url 'blog:like_post' 'placeholder' %}".replace('placeholder', slug); 
-            var csrfToken = '{{ csrf_token }}';
-
-            $.ajax({
-                type: 'POST',
-                url: url,
-                headers: {
-                    'X-CSRFToken': csrfToken
-                },
-                success: function (response) {
-                    $('.like-count').text(response.total_likes);
-                    $('.dislike-count').text(response.total_dislikes);
-                    console.log(response);
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-        });
-
-        // Função para o botão de dislike
-        $('.dislike-btn').on('click', function (e) {
-            e.preventDefault();
-            var slug = $(this).data('slug');
-            var url = "{% url 'blog:dislike_post' 'placeholder' %}".replace('placeholder', slug);
-            var csrfToken = '{{ csrf_token }}';
-
-            $.ajax({
-                type: 'POST',
-                url: url,
-                headers: {
-                    'X-CSRFToken': csrfToken
-                },
-                success: function (response) {
-                    $('.like-count').text(response.total_likes);
-                    $('.dislike-count').text(response.total_dislikes);
-                    console.log(response);
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Mostrar formulário de resposta
-        document.querySelectorAll('.reply-link').forEach(function (link) {
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
-                const commentId = this.getAttribute('data-comment-id');
-                document.getElementById(`reply-form-${commentId}`).style.display = 'block';
-            });
-        });
+    $('.like-btn').on('click', function (e) {
+        e.preventDefault();
+        const slug = $(this).data('slug');
+        const url = "{% url 'blog:like_post' 'x' %}".replace('x', slug);
 
-        // Cancelar resposta
-        document.querySelectorAll('.cancel-reply').forEach(function (button) {
-            button.addEventListener('click', function () {
-                const commentId = this.getAttribute('data-comment-id');
-                document.getElementById(`reply-form-${commentId}`).style.display = 'none';
-            });
+        $.ajax({
+            type: 'POST',
+            url: url,
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+            success: function (response) {
+                $('.like-count').text(response.total_likes);
+                $('.dislike-count').text(response.total_dislikes);
+            }
         });
     });
+
+    $('.dislike-btn').on('click', function (e) {
+        e.preventDefault();
+        const slug = $(this).data('slug');
+        const url = "{% url 'blog:dislike_post' 'x' %}".replace('x', slug);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+            success: function (response) {
+                $('.like-count').text(response.total_likes);
+                $('.dislike-count').text(response.total_dislikes);
+            }
+        });
+    });
+
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('.reply-link').forEach(link => {
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            document.getElementById(
+                `reply-form-${link.dataset.commentId}`
+            ).style.display = 'block';
+        });
+    });
+
+    document.querySelectorAll('.cancel-reply').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.getElementById(
+                `reply-form-${btn.dataset.commentId}`
+            ).style.display = 'none';
+        });
+    });
+
+});
 </script>
 
 {% endblock %}
+
