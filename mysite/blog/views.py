@@ -21,6 +21,12 @@ from django.db.models import Count
 # Página inicial com todos os posts publicados
 def home(request):
     all_posts = Post.objects.filter(status='published').order_by('-publish')
+
+    if request.user.is_authenticated:
+        following_user_ids = request.user.profile.following.values_list('user_id', flat=True)
+        allowed_user_ids = list(following_user_ids) + [request.user.id]
+        all_posts = all_posts.filter(author_id__in=allowed_user_ids)
+
     return render(request, 'index.html', {'posts': all_posts})
     
 
