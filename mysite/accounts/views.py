@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import Q
 from blog.models import Post
 from .forms import ProfileForm
 
@@ -9,7 +10,7 @@ from .forms import ProfileForm
 '''==[ Profile Page ]=='''
 def profile(request, username):
     profile_user = get_object_or_404(User, username=username)
-    posts = Post.objects.filter(author=profile_user).order_by('-publish')
+    posts = Post.objects.filter(author=profile_user, status='published').order_by('-publish')
     is_following = False
 
     if request.user.is_authenticated and request.user != profile_user:
@@ -19,6 +20,26 @@ def profile(request, username):
         "profile_user": profile_user,
         "posts": posts,
         "is_following": is_following,
+    })
+
+
+def discover_people(request):
+    query = request.GET.get("q", "").strip()
+    users = User.objects.select_related("profile").order_by("username")
+
+    if request.user.is_authenticated:
+        users = users.exclude(pk=request.user.pk)
+
+    if query:
+        users = users.filter(
+            Q(username__icontains=query) |
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query)
+        )
+
+    return render(request, "accounts/discover_people.html", {
+        "users": users,
+        "query": query,
     })
 
 '''==[ Editar Perfil ]=='''
