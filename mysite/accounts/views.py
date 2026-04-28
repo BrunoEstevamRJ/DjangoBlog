@@ -12,7 +12,11 @@ from .forms import ProfileForm
 '''==[ Profile Page ]=='''
 def profile(request, username):
     profile_user = get_object_or_404(User, username=username)
+<<<<<<< HEAD
+    posts = Post.objects.filter(author=profile_user).order_by('-publish')
+=======
     posts = Post.objects.filter(author=profile_user, status='published').order_by('-publish')
+>>>>>>> origin/main
     is_following = False
 
     if request.user.is_authenticated and request.user != profile_user:
@@ -93,7 +97,10 @@ def edit_profile(request):
 
 
 @login_required
+<<<<<<< HEAD
+=======
 @require_POST
+>>>>>>> origin/main
 def toggle_follow(request, username):
     target_user = get_object_or_404(User, username=username)
 
@@ -108,6 +115,8 @@ def toggle_follow(request, username):
     else:
         my_profile.following.add(target_profile)
 
+<<<<<<< HEAD
+=======
     next_url = request.POST.get("next")
     if next_url and url_has_allowed_host_and_scheme(
         url=next_url,
@@ -116,4 +125,5 @@ def toggle_follow(request, username):
     ):
         return redirect(next_url)
 
+>>>>>>> origin/main
     return redirect('accounts:profile', username=target_user.username)

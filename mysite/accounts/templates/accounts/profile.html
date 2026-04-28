@@ -47,6 +47,9 @@
                     </a>
                 </p>
 
+                <p class="mb-1"><strong>Seguidores:</strong> {{ profile_user.profile.followers.count }}</p>
+                <p><strong>Seguindo:</strong> {{ profile_user.profile.following.count }}</p>
+
                 {% if profile_user == request.user %}
                     <a href="{% url 'blog:user_posts' %}"
                        class="btn btn-outline-primary mt-2">
@@ -64,6 +67,13 @@
                             type="submit"
                             class="btn btn-outline-success mt-2"
                             {% if is_following %}onclick="return confirm('Tem certeza que deseja deixar de seguir este usuario?');"{% endif %}>
+                            {% if is_following %}Deixar de seguir{% else %}Seguir{% endif %}
+                        </button>
+                    </form>
+                {% elif request.user.is_authenticated %}
+                    <form method="post" action="{% url 'accounts:toggle_follow' profile_user.username %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-success mt-2">
                             {% if is_following %}Deixar de seguir{% else %}Seguir{% endif %}
                         </button>
                     </form>

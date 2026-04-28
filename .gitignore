@@ -1,3 +1,28 @@
+<<<<<<< HEAD
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+vv/
+
+# Django
+mysite/db.sqlite3
+mysite/media/
+mysite/staticfiles/
+
+# Local env/config
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
+=======
 __pycache__/
 *.py[cod]
 *.sqlite3
@@ -6,3 +31,4 @@ vv/
 .env
 media/
 staticfiles/
+>>>>>>> origin/main
