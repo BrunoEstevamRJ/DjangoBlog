@@ -41,9 +41,23 @@
                                 {{ profile_user.profile.followers.count }} seguidores
                             </div>
                         </div>
-                        <a href="{% url 'accounts:profile' profile_user.username %}" class="btn btn-outline-primary btn-sm">
-                            Ver perfil
-                        </a>
+                        <div class="d-flex align-items-center">
+                            {% if user.is_authenticated %}
+                                <form method="post" action="{% url 'accounts:toggle_follow' profile_user.username %}" class="mr-2">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button
+                                        type="submit"
+                                        class="btn btn-outline-success btn-sm"
+                                        {% if profile_user.id in following_ids %}onclick="return confirm('Tem certeza que deseja deixar de seguir este usuario?');"{% endif %}>
+                                        {% if profile_user.id in following_ids %}Deixar de seguir{% else %}Seguir{% endif %}
+                                    </button>
+                                </form>
+                            {% endif %}
+                            <a href="{% url 'accounts:profile' profile_user.username %}" class="btn btn-outline-primary btn-sm">
+                                Ver perfil
+                            </a>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
