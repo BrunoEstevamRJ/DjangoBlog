@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Python
 __pycache__/
 *.py[cod]
@@ -21,3 +22,13 @@ mysite/staticfiles/
 # IDE
 .idea/
 .vscode/
+=======
+__pycache__/
+*.py[cod]
+*.sqlite3
+db.sqlite3
+vv/
+.env
+media/
+staticfiles/
+>>>>>>> origin/main

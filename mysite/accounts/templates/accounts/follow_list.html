@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">{{ page_title }}</h2>
+            <p class="text-muted mb-0">
+                <a href="{% url 'accounts:profile' profile_user.username %}">@{{ profile_user.username }}</a>
+            </p>
+        </div>
+        <a href="{% url 'accounts:profile' profile_user.username %}" class="btn btn-outline-secondary">Voltar ao perfil</a>
+    </div>
+
+    {% if profiles %}
+        <div class="list-group">
+            {% for profile in profiles %}
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <a href="{% url 'accounts:profile' profile.user.username %}" class="text-dark">
+                                <strong>{{ profile.user.username }}</strong>
+                            </a>
+                            {% if profile.user.first_name or profile.user.last_name %}
+                                <div class="text-muted">
+                                    {{ profile.user.first_name }} {{ profile.user.last_name }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="text-muted small mr-3">{{ profile.followers.count }} seguidores</span>
+                            {% if relation == "following" and can_unfollow %}
+                                <form method="post" action="{% url 'accounts:toggle_follow' profile.user.username %}" class="mr-2 mb-0">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button
+                                        type="submit"
+                                        class="btn btn-outline-danger btn-sm"
+                                        onclick="return confirm('Tem certeza que deseja deixar de seguir este usuario?');">Deixar de seguir</button>
+                                </form>
+                            {% endif %}
+                            <a href="{% url 'accounts:profile' profile.user.username %}" class="btn btn-outline-primary btn-sm">
+                                Ver perfil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">{{ empty_message }}</p>
+    {% endif %}
+</div>
+{% endblock %}
