@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Python
 __pycache__/
 *.py[cod]
@@ -11,8 +10,12 @@ env/
 vv/
 
 # Django
+*.sqlite3
+db.sqlite3
 mysite/db.sqlite3
+media/
 mysite/media/
+staticfiles/
 mysite/staticfiles/
 
 # Local env/config
@@ -22,13 +25,3 @@ mysite/staticfiles/
 # IDE
 .idea/
 .vscode/
-=======
-__pycache__/
-*.py[cod]
-*.sqlite3
-db.sqlite3
-vv/
-.env
-media/
-staticfiles/
->>>>>>> origin/main
